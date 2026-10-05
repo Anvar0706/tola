@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "crates/tola-types",
+    "crates/tola-codec",
+    "crates/tola-crypto",
+    "crates/tola-core",
+    "crates/tola-state",
+    "crates/tola-storage",
+    "crates/tola-execution",
+    "crates/tola-consensus",
+    "crates/tola-mempool",
+    "crates/tola-p2p",
+    "crates/tola-rpc",
+    "crates/tola-node",
+]
+resolver = "2"

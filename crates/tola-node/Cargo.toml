@@ -1,0 +1,17 @@
+[package]
+name = "tola-node"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tola-types = { path = "../tola-types" }
+tola-codec = { path = "../tola-codec" }
+tola-crypto = { path = "../tola-crypto" }
+tola-core = { path = "../tola-core" }
+tola-state = { path = "../tola-state" }
+tola-storage = { path = "../tola-storage" }
+tola-execution = { path = "../tola-execution" }
+tola-consensus = { path = "../tola-consensus" }
+tola-mempool = { path = "../tola-mempool" }
+tola-p2p = { path = "../tola-p2p" }
+tola-rpc = { path = "../tola-rpc" }

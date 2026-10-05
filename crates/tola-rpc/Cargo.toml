@@ -1,0 +1,8 @@
+[package]
+name = "tola-rpc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tola-types = { path = "../tola-types" }
+tola-core = { path = "../tola-core" }

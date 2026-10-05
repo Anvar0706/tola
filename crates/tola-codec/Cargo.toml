@@ -1,0 +1,7 @@
+[package]
+name = "tola-codec"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tola-types = { path = "../tola-types" }
