@@ -1,0 +1,24 @@
+# TOLA Network: Comprehensive System Threat Model
+
+## 1. Threat Matrix & Mitigation Catalog
+
+| ID | Threat Vector | Description | Severity | Mitigation Strategy |
+| :--- | :--- | :--- | :--- | :--- |
+| **TM-01** | **Byzantine Validator Equivocation** | A validator signs two conflicting blocks at the same height to cause a chain split. | Critical | Slashing protocol: Submitting two conflicting signatures at height $H$ burns 100% of bonded stake and permanently jails validator. |
+| **TM-02** | **Nothing-at-Stake Attack** | Validators voting on multiple forks simultaneously because there is no computational cost. | Critical | Strict slashing of equivocating votes; deterministic BFT consensus prevents multi-fork survival. |
+| **TM-03** | **Long-Range Historical Reorg** | Adversary purchases discarded private keys of past validators to produce an alternate history from genesis. | High | Weak subjectivity checkpoints: Nodes reject finality claims older than the validator unbonding period without out-of-band checkpoint. |
+| **TM-04** | **Eclipse Attack** | Malicious peers surround a target node, monopolizing all its incoming and outgoing P2P connections. | High | Diverse peer discovery: Enforce maximum peer connections per IP subnet; randomize outbound peer selection; persist trusted peer tables. |
+| **TM-05** | **Sybil Network Flooding** | Attacker spins up thousands of fake nodes to exhaust network connection limits. | High | Peer scoring: Unresponsive or non-contributing nodes are penalized and banned; connection handshake requires proof of stake or peer credentials. |
+| **TM-06** | **Mempool DDoS / Spam** | Flooding nodes with millions of zero-fee or invalid transactions to exhaust RAM/CPU. | High | Strict admission filters: Minimum baseline gas fee; nonce validation before queuing; fee-market priority eviction when mempool is full. |
+| **TM-07** | **Transaction Replay Attack** | Replaying a valid transaction from Testnet on Mainnet, or replaying past transactions. | Critical | Unique `ChainID` encoded into signature pre-image; strictly incrementing account nonces. |
+| **TM-08** | **State Bloat & Disk Exhaustion** | Adversary deploys millions of spam contracts to bloat state and crash validator SSDs. | High | State creation deposits: Writing new storage slots requires an up-front refundable byte deposit. Pruning of historical non-consensus state. |
+| **TM-09** | **Smart Contract Re-Entrancy** | Malicious contract calls back into caller before state updates are finalized. | High | VM-level re-entrancy protection; Checks-Effects-Interactions pattern enforcement; static analysis linting in toolchain. |
+| **TM-10** | **Gas Calculation Desynchronization** | Discrepancy in gas calculation between node implementations leading to consensus fork. | Critical | Single reference VM specification with extensive differential fuzzing against official test suites. |
+| **TM-11** | **Private Key Exfiltration** | Malicious malware or browser extension stealing user seed phrases. | High | Non-custodial hardware enclave integration (Secure Enclave / Keystore); encrypted key vaults; strict sandboxing. |
+| **TM-12** | **RPC Denial of Service** | Flooding public RPC nodes with computationally heavy queries (`eth_getLogs` across huge ranges). | Medium | Strict RPC rate limiting, IP throttling, query parameter bounding (max 1000 blocks per log query), multi-tier caching. |
+| **TM-13** | **Malicious Mini App Phishing** | Deceptive Mini App presenting disguised transaction parameters to drain wallet. | High | Clear-signing UI: Wallet parses and renders exact target address, human-readable method, value, and maximum allowance with high-risk warnings. |
+| **TM-14** | **Cross-Shard Double Spend** | Replaying a cross-shard payment receipt on multiple recipient shards. | Critical | Two-phase receipt consumption with cryptographic nullifiers and coordination layer attestation. |
+| **TM-15** | **Validator Private Key Theft** | Compromise of active validator signing server. | Critical | Remote Signer architecture with Hardware Security Modules (HSM); threshold signatures (TSS/BLS); anti-double-signing local guards. |
+| **TM-16** | **Network Partition / Asynchrony** | Internet routing failure splitting the validator set into disconnected components. | High | Liveness halts gracefully if active voting power $< 2/3 + 1$; safety is guaranteed (no conflicting blocks finalized). |
+| **TM-17** | **Metadata Correlation Attack** | Correlating messenger chat activity with on-chain transaction timestamps. | Medium | Complete air-gap between chat server and blockchain; randomized transaction broadcasting relays (Dandelion++). |
+| **TM-18** | **Supply Inflation Vulnerability** | Integer overflow or rounding bugs in native asset minting logic. | Critical | Checked arithmetic enforced at language level (Rust overflow checks enabled); formal verification of native asset state transitions. |
