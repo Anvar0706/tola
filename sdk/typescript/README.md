@@ -24,7 +24,7 @@ Supports Node.js, Web browsers, React Native, and embedded web applications.
   - `JsonRpcProvider` for typed RPC queries, block headers, state queries, and transaction broadcasting.
   - EIP-1193 compliant `TolaProvider` for seamless integration into Ethereum/Web3 libraries (ethers.js, viem, web3.js).
 - **Optional Application Integration (TOLA Connect)**:
-  - Non-custodial, platform-neutral Mini App Bridge (`MiniAppBridge`).
+  - Non-custodial, platform-neutral Application Bridge (`AppWalletBridge`).
   - E2EE session management with ECDH + AES-256-GCM.
   - Mandatory clear-signing prompts with bounds checking and domain binding.
   - Multi-device authorization and revocation registry (`DeviceRegistry`).
@@ -113,13 +113,13 @@ const accounts = await provider.request({ method: 'eth_accounts' });
 console.log('Connected accounts:', accounts);
 ```
 
-### 5. Mini App & Clear-Signing Bridge
+### 5. Application & Clear-Signing Bridge
 
 ```typescript
-import { MiniAppBridge, TolaWallet } from '@tola/sdk';
+import { AppWalletBridge, TolaWallet } from '@tola/sdk';
 
 const wallet = TolaWallet.generate();
-const bridge = new MiniAppBridge(wallet, {
+const bridge = new AppWalletBridge(wallet, {
   expectedDomain: 'https://app.tola.network',
   onClearSign: async (prompt) => {
     // Present clear-signing details to user in UI

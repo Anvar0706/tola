@@ -214,8 +214,8 @@ class TestTolaSdk(unittest.TestCase):
 
     def test_clear_signing_prompt(self):
         prompt = ClearSigningPrompt(
-            domain="miniapp.tola.network",
-            action_name="Send In-Chat Tip",
+            domain="dapp.tola.network",
+            action_name="Send Application Transfer",
             target_address="tola1zlz3s5t8gq0dqr847ke0e97eh07m05p9t9nfc9",
             amount=50 * (10**18),
             asset_symbol="TOLA",
@@ -224,8 +224,8 @@ class TestTolaSdk(unittest.TestCase):
         )
         self.assertTrue(prompt.validate())
         summary = prompt.format_summary()
-        self.assertIn("miniapp.tola.network", summary)
-        self.assertIn("Send In-Chat Tip", summary)
+        self.assertIn("dapp.tola.network", summary)
+        self.assertIn("Send Application Transfer", summary)
         self.assertIn("50.0000 TOLA", summary)
 
         # Invalid prompt raises error
@@ -1290,6 +1290,9 @@ class TestTolaSdk(unittest.TestCase):
         self.assertFalse(hasattr(tola, "sign_badge_attestation"))
         self.assertFalse(hasattr(tola, "verify_badge_attestation"))
         self.assertFalse(hasattr(tola, "validate_tls721_metadata"))
+        self.assertFalse(hasattr(tola, "TelegramMiniAppBridge"))
+        self.assertFalse(hasattr(tola, "MiniAppBridge"))
+        self.assertFalse(hasattr(tola, "AppWalletBridge"))
 
     def test_external_asset_attestation_lifecycle_and_defenses(self):
         verifier = TolaWallet.generate()

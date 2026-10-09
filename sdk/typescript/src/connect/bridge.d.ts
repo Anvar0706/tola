@@ -2,7 +2,7 @@ import { TolaWallet } from '../wallet.js';
 import { ClearSigningPrompt } from './clear_signing.js';
 import { DeviceRegistry } from './session.js';
 
-export interface MiniAppBridgeOptions {
+export interface AppWalletBridgeOptions {
   onClearSign?: (prompt: ClearSigningPrompt) => Promise<boolean>;
   provider?: any;
   chainId?: number | bigint;
@@ -23,7 +23,7 @@ export interface PaymentRequest {
   deviceId?: string;
 }
 
-export declare class MiniAppBridge {
+export declare class AppWalletBridge {
   wallet: TolaWallet;
   onClearSign: (prompt: ClearSigningPrompt) => Promise<boolean>;
   provider: any;
@@ -31,7 +31,7 @@ export declare class MiniAppBridge {
   expectedDomain: string | null;
   deviceRegistry: DeviceRegistry | null;
 
-  constructor(wallet: TolaWallet, options?: MiniAppBridgeOptions);
+  constructor(wallet: TolaWallet, options?: AppWalletBridgeOptions);
   requestAccounts(): Promise<string[]>;
   requestPayment(request: PaymentRequest): Promise<{ status: string; tx: any }>;
   handleConnectEnvelope(envelope: any, session?: any): Promise<any>;

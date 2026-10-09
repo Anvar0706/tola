@@ -1,5 +1,5 @@
 /**
- * Clear-signing schema and validation for TOLA Connect & Mini Apps.
+ * Clear-signing schema and validation for TOLA Connect & applications.
  * Ensures users clearly understand domain, target, amount, fees, and memo before signing.
  */
 

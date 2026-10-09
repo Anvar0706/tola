@@ -40,7 +40,7 @@ import {
   validateClearSigningPrompt,
   formatClearSigningSummary,
   TolaConnectSession,
-  MiniAppBridge,
+  AppWalletBridge,
   ConnectMessageType,
   DeviceRegistry,
 } from '../src/connect/index.js';
@@ -249,12 +249,12 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
     assert.deepEqual(JSON.parse(decrypted), secretPayload);
   });
 
-  test('TOLA Connect: Mini App Bridge payment approval & rejection', async () => {
+  test('TOLA Connect: AppWalletBridge payment approval & rejection', async () => {
     const wallet = TolaWallet.generate();
     let promptSeen = null;
 
     // Bridge with user approval
-    const bridgeApproving = new MiniAppBridge(wallet, {
+    const bridgeApproving = new AppWalletBridge(wallet, {
       onClearSign: async (prompt) => {
         promptSeen = prompt;
         return true;
@@ -265,16 +265,16 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
     assert.equal(accounts[0], wallet.address.toBech32m());
 
     const result = await bridgeApproving.requestPayment({
-      domain: 'miniapp.tola.network',
+      domain: 'dapp.tola.network',
       to: 'tola1zlz3s5t8gq0dqr847ke0e97eh07m05p9t9nfc9',
       amount: 1000000000000000000n,
-      actionName: 'Donate',
+      actionName: 'Application Transfer',
     });
     assert.equal(result.status, 'signed');
-    assert.equal(promptSeen.domain, 'miniapp.tola.network');
+    assert.equal(promptSeen.domain, 'dapp.tola.network');
 
     // Bridge with user rejection
-    const bridgeRejecting = new MiniAppBridge(wallet, {
+    const bridgeRejecting = new AppWalletBridge(wallet, {
       onClearSign: async () => false,
     });
     await assert.rejects(
@@ -327,12 +327,12 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       assert.throws(() => session.validateEnvelope(envExpired), /Message envelope has expired/);
     });
 
-    test('TOLA Connect: Malicious Mini App Protection (Domain Binding, Chain Mismatch, Revoked Device)', async () => {
+    test('TOLA Connect: Malicious Application Protection (Domain Binding, Chain Mismatch, Revoked Device)', async () => {
       const wallet = TolaWallet.generate();
       const deviceReg = new DeviceRegistry();
       deviceReg.registerDevice('phone_1', 'My Phone');
 
-      const bridge = new MiniAppBridge(wallet, {
+      const bridge = new AppWalletBridge(wallet, {
         expectedDomain: 'dex.tola.network',
         deviceRegistry: deviceReg,
         chainId: 9999n,
@@ -1167,6 +1167,7 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       assert.equal(sdk.verifyBadgeAttestation, undefined);
       assert.equal(sdk.validateTLS721Metadata, undefined);
       assert.equal(sdk.TelegramMiniAppBridge, undefined);
+      assert.equal(sdk.MiniAppBridge, undefined);
     });
 
     test('External Asset Attestation Signing, Replay & Expiry Defenses', async () => {
@@ -1219,15 +1220,17 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       );
     });
 
-    test('Platform-Neutral MiniAppBridge and Absence of TelegramMiniAppBridge', async () => {
+    test('Platform-Neutral AppWalletBridge and Absence of Telegram and MiniApp Legacy Naming', async () => {
       const wallet = TolaWallet.generate();
-      const miniBridge = new MiniAppBridge(wallet);
-      const accounts = await miniBridge.requestAccounts();
+      const bridge = new AppWalletBridge(wallet);
+      const accounts = await bridge.requestAccounts();
       assert.equal(accounts[0], wallet.address.toBech32m());
 
-      // Assert that TelegramMiniAppBridge is removed from SDK exports for platform neutrality
+      // Assert that neither TelegramMiniAppBridge nor MiniAppBridge are exposed in SDK exports
       const sdk = await import('../src/index.js');
       assert.equal(sdk.TelegramMiniAppBridge, undefined);
+      assert.equal(sdk.MiniAppBridge, undefined);
+      assert.equal(typeof sdk.AppWalletBridge, 'function');
     });
 
     test('External Asset Metadata Validation and SSRF Filtering', () => {

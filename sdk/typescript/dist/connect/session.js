@@ -1,6 +1,6 @@
 /**
  * TOLA Connect Handshake & End-to-End Encrypted Session Protocol.
- * Manages secure communication channels between Mini Apps and User Wallets.
+ * Manages secure communication channels between Applications and User Wallets.
  */
 
 async function getWebCrypto() {

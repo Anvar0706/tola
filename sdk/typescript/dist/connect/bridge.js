@@ -1,13 +1,13 @@
 /**
- * Generic Mini App & Webview Bridge for TOLA Network.
- * Mediates communication between third-party app/tokenizer scripts and the non-custodial user wallet.
- * Protocol invariant: TOLA Connect does not verify external messenger ownership.
+ * Generic Application-to-Wallet Bridge for TOLA Network.
+ * Mediates communication between third-party app scripts and the non-custodial user wallet.
+ * Protocol invariant: TOLA Connect does not verify external platform ownership.
  */
 
 import { validateClearSigningPrompt, formatClearSigningSummary } from './clear_signing.js';
 import { Address } from '../address.js';
 
-export class MiniAppBridge {
+export class AppWalletBridge {
   /**
    * @param {Object} wallet - TolaWallet instance
    * @param {Object} [options] - Configuration options
@@ -18,7 +18,7 @@ export class MiniAppBridge {
    * @param {Object} [options.deviceRegistry] - DeviceRegistry instance for multi-device management
    */
   constructor(wallet, options = {}) {
-    if (!wallet) throw new Error('Wallet is required for MiniAppBridge');
+    if (!wallet) throw new Error('Wallet is required for AppWalletBridge');
     this.wallet = wallet;
     this.onClearSign = options.onClearSign || (async (prompt) => true);
     this.provider = options.provider || null;
@@ -35,9 +35,9 @@ export class MiniAppBridge {
   }
 
   /**
-   * Executes a payment requested by the Mini App.
+   * Executes a payment requested by the application.
    * Forces clear-signing user authorization prior to signing.
-   * Mitigates malicious Mini App attacks via domain, chain ID, device, and memo verification.
+   * Mitigates malicious application attacks via domain, chain ID, device, and memo verification.
    */
   async requestPayment(request) {
     if (!request || typeof request !== 'object') {
@@ -49,7 +49,7 @@ export class MiniAppBridge {
       to,
       amount,
       assetSymbol = 'TOLA',
-      actionName = 'Mini App Transfer',
+      actionName = 'Application Transfer',
       memo = null,
       maxFee = 21000n,
       nonce = 0n,
@@ -183,7 +183,7 @@ export class MiniAppBridge {
   }
 
   /**
-   * Dispatches arbitrary RPC methods from Mini App.
+   * Dispatches arbitrary RPC methods from application.
    */
   async handleMessage(message) {
     const { id, method, params } = message;
