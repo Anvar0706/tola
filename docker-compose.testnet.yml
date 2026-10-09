@@ -1,0 +1,164 @@
+version: "3.8"
+
+networks:
+  tola-testnet:
+    driver: bridge
+
+volumes:
+  validator-1-data:
+  validator-2-data:
+  validator-3-data:
+  validator-4-data:
+
+services:
+  validator-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tola-validator-1
+    command:
+      - "--chain-id"
+      - "102"
+      - "--data-dir"
+      - "/data"
+      - "--p2p-addr"
+      - "0.0.0.0:30301"
+      - "--rpc-addr"
+      - "0.0.0.0:8545"
+      - "--validator"
+      - "--validator-key"
+      - "0100000000000000000000000000000000000000000000000000000000000000"
+      - "--genesis"
+      - "/etc/tola/genesis.json"
+    volumes:
+      - validator-1-data:/data
+      - ./genesis.json:/etc/tola/genesis.json:ro
+    ports:
+      - "30301:30301"
+      - "8541:8545"
+    networks:
+      - tola-testnet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8545/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
+
+  validator-2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tola-validator-2
+    command:
+      - "--chain-id"
+      - "102"
+      - "--data-dir"
+      - "/data"
+      - "--p2p-addr"
+      - "0.0.0.0:30302"
+      - "--rpc-addr"
+      - "0.0.0.0:8545"
+      - "--validator"
+      - "--validator-key"
+      - "0200000000000000000000000000000000000000000000000000000000000000"
+      - "--genesis"
+      - "/etc/tola/genesis.json"
+      - "--bootstrap-peer"
+      - "validator-1:30301"
+    volumes:
+      - validator-2-data:/data
+      - ./genesis.json:/etc/tola/genesis.json:ro
+    ports:
+      - "30302:30302"
+      - "8542:8545"
+    networks:
+      - tola-testnet
+    depends_on:
+      - validator-1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8545/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
+
+  validator-3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tola-validator-3
+    command:
+      - "--chain-id"
+      - "102"
+      - "--data-dir"
+      - "/data"
+      - "--p2p-addr"
+      - "0.0.0.0:30303"
+      - "--rpc-addr"
+      - "0.0.0.0:8545"
+      - "--validator"
+      - "--validator-key"
+      - "0300000000000000000000000000000000000000000000000000000000000000"
+      - "--genesis"
+      - "/etc/tola/genesis.json"
+      - "--bootstrap-peer"
+      - "validator-1:30301"
+    volumes:
+      - validator-3-data:/data
+      - ./genesis.json:/etc/tola/genesis.json:ro
+    ports:
+      - "30303:30303"
+      - "8543:8545"
+    networks:
+      - tola-testnet
+    depends_on:
+      - validator-1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8545/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
+
+  validator-4:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tola-validator-4
+    command:
+      - "--chain-id"
+      - "102"
+      - "--data-dir"
+      - "/data"
+      - "--p2p-addr"
+      - "0.0.0.0:30304"
+      - "--rpc-addr"
+      - "0.0.0.0:8545"
+      - "--validator"
+      - "--validator-key"
+      - "0400000000000000000000000000000000000000000000000000000000000000"
+      - "--genesis"
+      - "/etc/tola/genesis.json"
+      - "--bootstrap-peer"
+      - "validator-1:30301"
+    volumes:
+      - validator-4-data:/data
+      - ./genesis.json:/etc/tola/genesis.json:ro
+    ports:
+      - "30304:30304"
+      - "8544:8545"
+    networks:
+      - tola-testnet
+    depends_on:
+      - validator-1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8545/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
