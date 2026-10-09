@@ -2914,6 +2914,7 @@ name = "tola-cli"
 version = "0.1.0"
 dependencies = [
  "hex",
+ "libc",
  "tola-codec",
  "tola-core",
  "tola-crypto",

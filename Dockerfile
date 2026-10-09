@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 # Build Stage: Compile high-performance release binaries
 # ------------------------------------------------------------------------------
-FROM rust:1.80-bullseye AS builder
+FROM rust:1-bullseye AS builder
 
 WORKDIR /usr/src/tola
 

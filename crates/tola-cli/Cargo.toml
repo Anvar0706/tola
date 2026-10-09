@@ -14,3 +14,7 @@ tola-node = { path = "../tola-node" }
 tola-sdk = { path = "../tola-sdk" }
 zeroize = "1.8"
 hex = "0.4"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
