@@ -11,3 +11,4 @@ This directory defines the foundational mathematical, cryptographic, and data se
 - Canonical Serialization: [prompts/08-serialization.md](../../prompts/08-serialization.md)
 - Native Asset & Economics: [prompts/20-native-asset.md](../../prompts/20-native-asset.md)
 - Dynamic Gas & Fees: [prompts/19-gas-and-fees.md](../../prompts/19-gas-and-fees.md)
+- EVM Core Specification: [../smart-contracts/evm-core-specification.md](../smart-contracts/evm-core-specification.md)

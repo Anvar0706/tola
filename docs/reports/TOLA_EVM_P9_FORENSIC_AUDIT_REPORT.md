@@ -24,7 +24,7 @@ The audit verified:
 ## 2. Actual Repository Diff Verification
 
 Inspection of the repository working tree and filesystem timestamps revealed:
-- **Modified Test File**: [`crates/tola-node/tests/p9_ethereum_conformance_test.rs`](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/crates/tola-node/tests/p9_ethereum_conformance_test.rs)
+- **Modified Test File**: [`crates/tola-node/tests/p9_ethereum_conformance_test.rs`](../../crates/tola-node/tests/p9_ethereum_conformance_test.rs)
   - Lines 1255–1259: Added clarifying comments on `test_p9_canonical_gst_call_depth_limits` documenting that it is retained as a depth-5 shallow recursion regression test.
   - Lines 1327–1432: Added new integration test `test_p9_canonical_evm_call_depth_1024_boundary` (104 lines of code).
 - **Existing Test Suite**: Untouched. All existing 38 test functions in `p9_ethereum_conformance_test.rs` remain byte-for-byte identical.

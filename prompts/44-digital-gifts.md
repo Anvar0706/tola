@@ -1,91 +1,49 @@
-# SUBSYSTEM: Digital Gifts & Social Collectibles
+# SUBSYSTEM: External Digital Gifts & Collectibles Tokenization
 
 ## Objective
-Design the digital gift asset model, smart contract contracts, profile badge binding protocols, and secondary marketplace interfaces for TOLA Network.
+Specify the tokenization and on-chain ownership model for external digital gifts, collectibles, and badges (e.g. from PaxtaGram, Telegram, or other digital platforms) on TOLA Network.
+
+## Architectural Source of Truth
+TOLA Network does **NOT** create external messenger gifts, does **NOT** create Gifts Numbers, and does **NOT** operate a native gift ecosystem or profile badge registry.
+Digital gifts and collectibles represented on TOLA originate exclusively on **external platforms** and are tokenized via independent third-party tokenization applications into TLS-721 tokens (`contracts/TolaExternalAssetToken.sol`) under `ExternalAssetType::MessengerGift`, `ExternalAssetType::MessengerBadge`, or `ExternalAssetType::DigitalCollectible`.
 
 ## Why It Exists
-Digital gifts provide vibrant social expression, creator monetization, and community gifting within social messengers and apps. They bridge digital asset ownership with social status.
+Users across social messengers and creator platforms wish to hold verifiable blockchain ownership and open-market transferability of their external digital gifts without coupling the TOLA blockchain to the messenger platform's internal servers.
 
 ## Dependencies
 - `prompts/18-smart-contract-vm.md`
 - `prompts/22-nft-and-assets.md`
-- `prompts/42-messenger-integration.md`
+- `contracts/TolaExternalAssetToken.sol`
 
 ## Non-Goals
-- Forcing social profiles to custody the underlying blockchain private keys.
+- Native on-chain gift minting or native gift number generation (`tola_getGiftDetails`, `tola_verifyBadgeAttestation`).
+- Direct integration with or mutation of external platform gift inventories.
 
 ## Requirements
-- Separation of Ownership and Profile Display:
-  - **Ownership**: The gift is an immutable TLS-721 token owned by a TOLA blockchain address.
-  - **Social Display**: The owner issues a signed off-chain attestation allowing their messenger profile to showcase the badge.
-- Gifting Mechanics:
-  - Users can send gifts directly to another user's address or `@username`.
-  - Optional custom gift messages and on-chain animations.
-- Supply Models:
-  - **Limited Editions**: Verifiably capped total supplies (e.g. 500 units worldwide) with serial numbers.
-  - **Dynamic Attributes**: Upgradable visual traits based on ecosystem activity.
-- Creator Royalties: Native ERC-2981 royalty enforcement on all secondary market sales.
+- Decoupled Ownership Invariant:
+  - TOLA TLS-721 token ownership represents blockchain ownership on TOLA.
+  - The original gift record inside the messenger's proprietary database remains governed strictly by the external platform.
+  - Secondary market transfers on TOLA do not automatically mutate the external messenger database.
+- Canonical ID Determinism & Duplicate Prevention:
+  - Canonical ID is computed deterministically from platform, asset type, and external asset ID.
+  - Prevents double-tokenization of the same external gift.
+- Attestation-Based Minting:
+  - Authorized verifiers sign off-chain ECDSA Secp256k1 attestations.
+  - TOLA smart contract enforces cryptographic verification and single-use replay protection.
 
 ## Architecture
 ```
-     On-Chain Gift Contract (TLS-721)               Off-Chain Messenger Profile
-┌────────────────────────────────────────┐         ┌───────────────────────────┐
-│ Token ID: #104 (Limited 500)           │         │ Profile: Alice            │
-│ Owner: 0x8A4...b1C                     │◄──Proof─┤ Showcase Badge: Gift #104 │
-│ Transferable: true                     │         │ Verification: Active      │
-└────────────────────────────────────────┘         └───────────────────────────┘
-```
-
-## Interfaces (Solidity / ABI)
-```solidity
-interface ITolaGift is ITLS721 {
-    event GiftSent(address indexed from, address indexed to, uint256 indexed giftId, string message);
-
-    function mintLimitedEdition(string calldata giftType, uint256 maxSupply, uint256 price) external;
-    function sendGift(address recipient, uint256 giftTypeId, string calldata message) external payable returns (uint256 tokenId);
-    function getGiftDetails(uint256 tokenId) external view returns (string memory giftType, uint256 serialNumber, uint256 maxSupply);
-}
-```
-
-## Data Structures
-```solidity
-struct GiftMetadata {
-    string giftType;
-    uint32 serialNumber;
-    uint32 maxSupply;
-    uint64 mintedTimestamp;
-    string metadataURI;
-}
+[ External Platform DB: Gift #987 ]
+         │
+         ▼
+[ Independent 3rd-Party Tokenizer ] ──(signs attestation)──► [ TOLA Wallet ]
+                                                                   │
+                                                                   ▼
+                                                            [ TOLA Blockchain ]
+                                                            (TLS-721 Token Mint)
 ```
 
 ## Security Requirements
-- Unlinkable gifting option: Support sending gifts without exposing sender's main wallet balance.
-- Royalties cannot be bypassed by wrapping contracts without violating marketplace standards.
-
-## Failure Modes
-- Displaying a gift badge on a social profile after the underlying NFT has been sold (indexer sync immediately revokes badge).
-
-## Testing Requirements
-- Unit tests for limited edition mint limits, serial number accuracy, and gift transfers.
-- Gas benchmarking for batch gift distribution.
-
-## Performance Requirements
-- Gift minting and sending gas $< 100,000$ gas.
-
-## Migration Requirements
-- Modular metadata URI management allowing high-fidelity decentralized asset upgrades.
-
-## Acceptance Criteria
-- Digital gifts specification documented in `docs/gifts/digital-gifts.md`.
-- Reference smart contract and profile binding protocols verified.
-
-## Open Questions
-- Should gifts support burn-to-redeem mechanisms for native TOLA rewards?
-
-## Implementation Tasks
-1. Author `TolaDigitalGift.sol` smart contract.
-2. Implement cryptographic display attestation verification in SDK.
-3. Design gift packaging and unboxing metadata format.
-
-## Completion Criteria
-Gift contracts tested, audited, and integrated with messenger profile display protocols.
+- Replay defense preventing reuse of mint attestations across nonces or accounts.
+- Cryptographic attestation verification with expiry checks.
+- Zero dependency on external messenger backend availability or consensus logic.

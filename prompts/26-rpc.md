@@ -17,7 +17,7 @@ External applications, developer tools, block explorers, and wallets interact wi
 ## Requirements
 - Dual API Surface:
   1. **Standard EVM JSON-RPC**: `eth_blockNumber`, `eth_getBalance`, `eth_sendRawTransaction`, `eth_call`, `eth_estimateGas`, `eth_getLogs`, `net_version`, `web3_clientVersion`.
-  2. **Native TOLA RPC**: `tola_getNetworkInfo`, `tola_getValidators`, `tola_getShardInfo`, `tola_resolveUsername`, `tola_getGift`.
+  2. **Native TOLA RPC**: `tola_getNetworkInfo`, `tola_getValidators`, `tola_getShardInfo`.
 - WebSocket Event Streams: PubSub subscriptions for new block headers (`newHeads`), pending transactions (`newPendingTransactions`), and contract logs (`logs`).
 - Security & Rate Limiting: IP-based token bucket rate limiting, query parameter size bounding (e.g. max 2,000 blocks for log queries), and timeout guards.
 

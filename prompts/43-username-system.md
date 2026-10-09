@@ -1,91 +1,50 @@
-# SUBSYSTEM: Decentralized Username Registry (@username)
+# SUBSYSTEM: External Username Tokenization
 
 ## Objective
-Design the decentralized, blockchain-owned username system for TOLA Network, mapping human-readable `@username` identifiers to blockchain addresses and identity records.
+Specify the tokenization and on-chain ownership model for external platform usernames (e.g. PaxtaGram, Telegram, X, Discord) on TOLA Network.
+
+## Architectural Source of Truth
+TOLA Network does **NOT** operate a native username registry, does **NOT** create social identities, and does **NOT** operate a sovereign naming namespace.
+All usernames represented on TOLA originate exclusively on **external platforms** and are tokenized via independent third-party tokenization applications onto the TOLA blockchain as TLS-721 tokens (`contracts/TolaExternalAssetToken.sol`) under `ExternalAssetType::MessengerUsername` or `ExternalAssetType::SocialUsername`.
 
 ## Why It Exists
-Hexadecimal and Bech32m addresses are difficult for humans to memorize and verify. A decentralized username registry enables intuitive social payments (`@bob`) and decentralized identity.
+Users across social platforms want sovereign on-chain ownership, transferability, and secondary market liquidity for their existing digital platform handles without coupling the blockchain to centralized platform infrastructure.
 
 ## Dependencies
 - `prompts/18-smart-contract-vm.md`
 - `prompts/22-nft-and-assets.md`
-- `prompts/45-identity-and-privacy.md`
+- `contracts/TolaExternalAssetToken.sol`
 
 ## Non-Goals
+- Operating a native on-chain name registration or resolution service (`tola_resolveUsername`).
+- Directly integrating with or mutating external platform databases.
 - Centralized DNS servers or proprietary domain databases.
 
 ## Requirements
-- Blockchain Ownership: Usernames are represented as unique on-chain digital assets (TLS-721 compatible).
-- Registry Features:
-  - **Register**: Mint username record via on-chain contract.
-  - **Resolve**: Lookup TOLA address corresponding to `@username` in $O(1)$ contract storage read.
-  - **Transfer**: Transfer username ownership to another address.
-  - **Renew**: Annual renewal fee model to reclaim abandoned usernames.
-- Anti-Squatting Rules:
-  - Minimum character pricing (e.g. 4-character names cost significantly more than 10-character names).
-  - Reserved namespace for critical system and brand identities.
-  - Progressive Vickrey auctions for high-demand short names.
+- Decoupled Ownership Invariant:
+  - On-chain ownership represents cryptographic control of the TLS-721 token on TOLA.
+  - The external handle in the messenger/platform database remains governed exclusively by that platform.
+- Canonical ID Determinism & Duplicate Prevention:
+  - Canonical ID is computed as:
+    $$\text{Keccak-256}(\text{"TOLA\_EXTERNAL\_ASSET\_CANONICAL\_V1:"} \parallel \text{platform\_len} \parallel \text{platform} \parallel \text{asset\_type} \parallel \text{id\_len} \parallel \text{id})$$
+  - Prevents duplicate mints across different tokenizers.
+- Attestation-Based Minting:
+  - Independent third-party verifiers sign ECDSA Secp256k1 attestations off-chain.
+  - TOLA smart contract verifies the attestation and enforces replay protection (`nonce`, `chainId`, `expiresAt`).
 
 ## Architecture
 ```
-@username Lookup -> Local Indexer Cache -> TOLA Username Registry Contract
-                 -> Verified Owner Address -> Instant In-Chat Transfer
-```
-
-## Interfaces (Solidity / ABI)
-```solidity
-interface ITolaUsernameRegistry {
-    event UsernameRegistered(string indexed username, address indexed owner, uint256 expiration);
-    event UsernameTransferred(string indexed username, address indexed oldOwner, address indexed newOwner);
-
-    function register(string calldata username, uint256 durationYears) external payable;
-    function resolve(string calldata username) external view returns (address owner, address targetAddress);
-    function transferName(string calldata username, address newOwner) external;
-    function renew(string calldata username, uint256 durationYears) external payable;
-}
-```
-
-## Data Structures
-```solidity
-struct UsernameRecord {
-    address owner;
-    address targetAddress;
-    uint64 registeredAt;
-    uint64 expiresAt;
-    bytes32 metadataHash;
-}
+[ External Platform DB: @username ]
+         │
+         ▼
+[ Independent 3rd-Party Tokenizer ] ──(signs attestation)──► [ TOLA Wallet ]
+                                                                   │
+                                                                   ▼
+                                                            [ TOLA Blockchain ]
+                                                            (TLS-721 Token Mint)
 ```
 
 ## Security Requirements
-- Homoglyph / Punycode attack prevention: Strict character set validation (lowercase alphanumeric `[a-z0-9_]`) enforced at contract level.
-- Front-running prevention: Two-phase commit-reveal registration scheme to prevent MEV bots from stealing requested usernames.
-
-## Failure Modes
-- User losing ownership due to unrenewed expiration (grace period required before public re-auction).
-- Name spoofing using visually identical Unicode characters.
-
-## Testing Requirements
-- Unit tests validating commit-reveal registration, renewals, expirations, and homoglyph rejections.
-- Fuzz testing character lengths and edge-case name inputs.
-
-## Performance Requirements
-- On-chain username resolution gas $< 30,000$ gas.
-- Cached off-chain resolution $< 5\text{ ms}$.
-
-## Migration Requirements
-- Registry contract upgradeable via governance without losing existing registered name mappings.
-
-## Acceptance Criteria
-- Username specification documented in `docs/usernames/username-system.md`.
-- Audited reference smart contract implementation committed.
-
-## Open Questions
-- What length grace period (e.g. 30 days vs 90 days) should precede username expiration auctions?
-
-## Implementation Tasks
-1. Author reference `TolaUsernameRegistry.sol` smart contract.
-2. Implement commit-reveal registration to block front-running.
-3. Integrate username resolution into TOLA SDK.
-
-## Completion Criteria
-Username smart contracts fully tested, audited, and integrated into SDK resolution library.
+- Replay defense across chains, nonces, and destination addresses.
+- Duplicate mint rejection for already tokenized canonical handles.
+- Zero dependency on external platform backend availability or consensus logic.

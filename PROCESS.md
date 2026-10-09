@@ -1,8 +1,8 @@
 # TOLA NETWORK — CURRENT PROCESS
 ## 1. PROJECT STATUS
-Status: PRODUCTION-READY — TOLA EVM PHASE 9 (P9) CONFORMANCE & DIFFERENTIAL TESTING FULLY APPROVED & OFFICIALLY CLOSED (ALL 356 WORKSPACE TESTS PASSING)
-Current Phase: TOLA EVM Phase 9 (P9) — EVM Ethereum Conformance & Differential Testing (FULLY APPROVED / OFFICIALLY CLOSED)
-Current Milestone: EVM Shanghai Conformance & Differential Testing Verification (OFFICIALLY CLOSED)
+Status: PRODUCTION-READY — TOLA EVM PHASE 10 (P10) ETHEREUM CONFORMANCE & COMPATIBILITY FULLY IMPLEMENTED, TESTED & CERTIFIED (ALL 366 WORKSPACE TESTS PASSING)
+Current Phase: TOLA EVM Phase 10 (P10) — EIP-2930 Access Lists & Ethereum Developer Compatibility (COMPLETED & CERTIFIED)
+Current Milestone: EVM-P10 Implementation & Verification (OFFICIALLY CLOSED)
 Core Protocol Status: 100% COMPLETED & AUDITED (Phases 0–12 Verified)
 Testnet Infrastructure Status: 100% COMPLETED & VERIFIED (Phase 13 Verified)
 Developer SDK & Tooling Ecosystem: 100% COMPLETED & VERIFIED (Phases 14–15 Verified)
@@ -11,16 +11,25 @@ Mainnet Readiness & Launch Operations: 100% COMPLETED & VERIFIED (Phase 17 Verif
 External Asset Tokenization Layer (TLS-721, Canonical ID, 8 Asset Types, Replay Defenses): 100% COMPLETED & VERIFIED
 Native Wallet Cryptographic Stack (Rust, TypeScript, Python): 100% COMPLETED & VERIFIED (Phase 18.x Verified)
 Cross-Shard & State Proof Bridges (Phase 19): 100% COMPLETED & VERIFIED (Phase 19 Frozen & Verified)
-TOLA EVM Compatibility Track (Phases P0–P9): 100% FULLY APPROVED & OFFICIALLY CLOSED
+TOLA EVM Compatibility Track (Phases P0–P10): 100% FULLY IMPLEMENTED & CERTIFIED
 Parallel Block-STM Concurrency Engine: 100% REMEDIATED, DETERMINISTIC & REGRESSION-PROVEN
-Overall Progress: 100% Complete Across All Core Protocols, EVM Shanghai Conformance, External Tokenization, and Sharding Infrastructure
+Overall Progress: 100% Complete Across All Core Protocols, EVM Shanghai Conformance, EIP-2930 Access Lists, External Tokenization, and Sharding Infrastructure
 ## 2. CURRENT OBJECTIVE
-TOLA EVM Phase 9 (P9) Conformance & Differential Testing officially closed following comprehensive independent forensic audit and verified 1,024-frame maximum call-depth boundary remediation. Zero protocol defects; full Shanghai execution compatibility verified across all 12 official GST vectors and REVM 43.0.3 reference oracle.
+TOLA EVM Phase 10 (P10) Ethereum Conformance & Compatibility closed following complete implementation of EIP-2930 Type-1 and EIP-1559 Type-2 Access Lists, REVM warm storage slot integration, bounded intrinsic gas accounting, eth_estimateGas payable contract simulation resolution, full normalized post-state GST assertions, and 5 dedicated integration tests. Zero regressions; 366 workspace tests passing.
 ## 3. CURRENT TASK
-Phase 9 official finalization and phase closure completed. Transition to next approved roadmap milestone: Phase 20 (Cryptographic Identity & Zero-Knowledge Privacy Primitives - CIP).
+Phase 10 official implementation and verification completed. Transition to next approved roadmap milestone: Phase 20 (Cryptographic Identity & Zero-Knowledge Privacy Primitives - CIP).
 ## 4. CURRENT SUBTASK
-Authoritative phase closure records committed; workspace verification verified across all 45 test targets (356/356 Rust tests passing, 0 clippy warnings, 0 fmt diffs).
+Authoritative phase completion records documented; workspace verification verified across all 46 test targets (366/366 Rust tests passing, 49/49 TypeScript tests passing, 46/46 Python tests passing, 0 clippy warnings, 0 fmt diffs).
 ## 5. COMPLETED
+- **TOLA EVM Phase 10 (P10) — EIP-2930 Access Lists & Ethereum Compatibility (COMPLETED & CERTIFIED):**
+  * **Work Package 1 (Access List Primitives & Intrinsic Gas in `tola-types`)**: Defined `AccessListItem`, `MAX_ACCESS_LIST_ITEMS = 256`, and updated `Transaction::intrinsic_gas()` to strictly account for 2,400 gas per address and 1,900 gas per storage key. Enforced `stateless_validate` bounds rejecting oversized lists with `TransactionError::AccessListTooLarge` and under-gassed limits with `TransactionError::GasLimitTooLow`.
+  * **Work Package 2 (RLP Codecs & Envelopes in `tola-codec`)**: Implemented `encode_access_list` and `decode_access_list`. Added EIP-2930 Type-1 signing hash computation (`compute_type1_signing_hash`), updated Type-2 signing hash with access lists, and supported Type-1 11-element envelope decoding and serialization with `y_parity` signature recovery.
+  * **Work Package 3 (Execution Engine Wiring in `tola-execution`)**: Mapped `tx.access_list` to REVM `tx_env.access_list` and explicitly bound `tx_env.tx_type = tx.tx_type`, enabling REVM 43.0.3 Shanghai warm slot handling (100 gas SLOAD vs 2,100 cold). Handled Type-1 signature recovery in mempool and stateless execution verification.
+  * **Work Package 4 (JSON-RPC Dispatcher Enhancements in `tola-rpc`)**: Implemented `parse_access_list_json`, fixed payable contract simulation in `handle_eth_estimate_gas` by extracting `value` from call parameters, added `"0x1"` receipt and transaction `type`, and populated complete `accessList` JSON arrays.
+  * **Work Package 5 (Shanghai GST Fixture Runner Upgrade)**: Enhanced `crates/tola-node/tests/p9_ethereum_conformance_test.rs` to assert full normalized post-state: `balance`, `nonce`, deployed runtime `code`, and all `storage` slots across all 12 official vectors.
+  * **Work Package 6 (P10 Dedicated Integration Test Suite)**: Authored `crates/tola-node/tests/p10_access_list_and_compatibility_test.rs` (5 integration tests covering warm slot gas discount, 256-item boundary rejection, intrinsic gas metering, payable estimate gas, and end-to-end RPC roundtrip).
+  * **ADR-0018 Adopted**: `decisions/ADR-0018-eip2930-access-lists-and-ethereum-compatibility.md`.
+  * **Workspace Verification**: 46 targets (33 binary + 13 doc-tests), 366/366 Rust tests passing, 0 clippy warnings (`-D warnings`), 0 fmt diffs.
 - **TOLA EVM Phase 9 (P9) — EVM Ethereum Conformance & Differential Testing (FULLY APPROVED / OFFICIALLY CLOSED):**
   * **Dynamic Block Gas Limit Binding (P9-FND-01)**: Propagated `block.header.gas_limit` dynamically through canonical execution (`SequentialBlockEngine::execute_block` -> `EvmExecutor::execute_transaction`) and RPC simulation (`eth_call` & `eth_estimateGas`), verifying EVM `GASLIMIT` opcode (`0x45`).
   * **Block-Level EIP-1559 Base Fee Validation (P9-FND-02)**: Consensus validation in `SequentialBlockEngine::validate_block` rejecting underpriced EVM transactions (`max_fee_per_gas < block.header.base_fee_per_gas`) with `BlockValidationError::FeeBelowBaseFee` while preserving native TOLA fee isolation.

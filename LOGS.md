@@ -1899,3 +1899,66 @@ Achieve full, mathematically verified Ethereum Shanghai execution conformance ac
 - EVM Compatibility Track (P0–P9) is 100% complete and certified.
 - Next Roadmap Milestone: Phase 20 (Cryptographic Identity & Zero-Knowledge Privacy Primitives - CIP).
 
+## 2026-10-09 15:20
+### Phase
+Phase 10 (P10) — EVM Ethereum Conformance & Compatibility
+### Task
+EIP-2930 Type-1 and EIP-1559 Type-2 Access List Implementation, Intrinsic Gas Accounting, RPC Simulation Alignment, and Shanghai Conformance Certification
+### Objective
+Implement full EIP-2930 and EIP-1559 Access List support, integrate with REVM 43.0.3 Shanghai warm storage slot semantics, align boundary intrinsic gas accounting, resolve `eth_estimateGas` payable contract simulation failures, upgrade Shanghai GST fixture post-state verification, and seal all changes with a dedicated integration test suite.
+### Work Performed
+- **Work Package 1 — Access List Primitives (`tola-types`)**:
+  - Defined `AccessListItem { address: Address, storage_keys: Vec<Hash> }` and `MAX_ACCESS_LIST_ITEMS = 256` in `crates/tola-types/src/transaction.rs`.
+  - Added `pub access_list: Vec<AccessListItem>` to `Transaction`, preserving wire compatibility across native formats.
+  - Implemented exact intrinsic gas formula in `Transaction::intrinsic_gas()`: $21{,}000 + 16 \times nz + 4 \times z + G_{\text{create}} + 2{,}400 \times N_{\text{addresses}} + 1{,}900 \times N_{\text{storage\_keys}}$.
+  - Enforced stateless validation checking `access_list.len() <= MAX_ACCESS_LIST_ITEMS` (`TransactionError::AccessListTooLarge`) and `gas_limit >= intrinsic_gas` (`TransactionError::GasLimitTooLow`).
+- **Work Package 2 — RLP Codecs & Envelopes (`tola-codec`)**:
+  - Implemented `encode_access_list` and `decode_access_list` in `crates/tola-codec/src/rlp.rs`.
+  - Added `compute_type1_signing_hash` for EIP-2930 envelopes.
+  - Updated `compute_type2_signing_hash` to include access list encoding.
+  - Supported Type-1 envelope decoding (`raw[0] == 0x01`, 11 elements) with `y_parity` signature recovery.
+  - Handled Type-1 and Type-2 encoding in `encode_raw_eth_transaction`.
+- **Work Package 3 — Execution Engine Wiring (`tola-execution`)**:
+  - Mapped `tx.access_list` to REVM `tx_env.access_list`.
+  - Explicitly set `tx_env.tx_type = tx.tx_type`, enabling REVM 43.0.3 Shanghai warm slot handling (100 gas SLOAD vs 2,100 gas cold).
+  - Wired Type-1 signature recovery in mempool admission and stateless execution verification.
+- **Work Package 4 — JSON-RPC Dispatcher Enhancements (`tola-rpc`)**:
+  - Implemented `parse_access_list_json` in `crates/tola-rpc/src/dispatcher.rs`.
+  - Resolved payable contract simulation failure in `handle_eth_estimate_gas` by extracting `value` from call parameters instead of hardcoding `Amount::ZERO`.
+  - Added `"0x1"` receipt and transaction `type`.
+  - Populated complete `"accessList"` JSON arrays for Type-1 and Type-2 transactions.
+- **Work Package 5 — Shanghai GST Fixture Runner Upgrade (`tola-node`)**:
+  - Upgraded `run_official_shanghai_fixture_json` in `crates/tola-node/tests/p9_ethereum_conformance_test.rs` to assert full normalized post-state: `balance`, `nonce`, deployed runtime `code`, and all `storage` slots.
+- **Work Package 6 — Dedicated Integration Testing (`tola-node`)**:
+  - Authored `crates/tola-node/tests/p10_access_list_and_compatibility_test.rs` with 5 deterministic integration tests:
+    - `test_p10_eip2930_access_list_warm_slot_gas_discount`: verified warm SLOAD saves 2,000 gas in execution.
+    - `test_p10_access_list_size_limit_rejection`: verified 256 items pass, 257 items reject.
+    - `test_p10_intrinsic_gas_access_list_metering`: verified exact 27,200 gas requirement and rejection at 27,199.
+    - `test_p10_payable_eth_estimate_gas_accuracy`: verified contracts reverting on `msg.value == 0` now successfully estimate gas when non-zero `value` is passed.
+    - `test_p10_full_rpc_roundtrip_type1_and_type2_with_access_list`: verified block commitment, receipt format, and RPC JSON serialization.
+- **Architectural Decision Record**:
+  - Formally adopted `decisions/ADR-0018-eip2930-access-lists-and-ethereum-compatibility.md`.
+### Files Created / Modified
+- `crates/tola-types/src/transaction.rs`
+- `crates/tola-codec/src/rlp.rs`
+- `crates/tola-execution/src/evm.rs`
+- `crates/tola-execution/src/lib.rs`
+- `crates/tola-mempool/src/pool.rs`
+- `crates/tola-rpc/src/dispatcher.rs`
+- `crates/tola-node/tests/p9_ethereum_conformance_test.rs`
+- `crates/tola-node/tests/p10_access_list_and_compatibility_test.rs`
+- `decisions/ADR-0018-eip2930-access-lists-and-ethereum-compatibility.md`
+- `PROCESS.md`
+- `LOGS.md`
+### Tests
+- **P10 Integration Suite**: 5/5 passing (`cargo test --test p10_access_list_and_compatibility_test`)
+- **P9 Integration Suite**: 39/39 passing (`cargo test --test p9_ethereum_conformance_test`)
+- **Rust Workspace**: 46 targets (33 binary + 13 doc-tests), 366/366 tests passing (`cargo test --workspace`)
+- **TypeScript SDK**: 49/49 tests passing (`node --test sdk/typescript/test/sdk.test.mjs`)
+- **Python SDK**: 46/46 tests passing (`python -m unittest discover -s sdk/python/tests -p "test_*.py"`)
+- **Linter & Fmt**: 0 clippy warnings (`-D warnings`), 0 fmt diffs (`cargo fmt --all -- --check`)
+### Results
+- Status: **PHASE 10 FULLY IMPLEMENTED, VERIFIED & CERTIFIED**.
+- EVM Compatibility Track (P0–P10) is 100% complete with full EIP-2930 and EIP-1559 access list support.
+
+

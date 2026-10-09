@@ -326,7 +326,7 @@ cargo test --workspace
 
 ## 7. Git Diff Summary
 
-Only a single test file was modified: [`crates/tola-node/tests/p9_ethereum_conformance_test.rs`](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/crates/tola-node/tests/p9_ethereum_conformance_test.rs):
+Only a single test file was modified: [`crates/tola-node/tests/p9_ethereum_conformance_test.rs`](../../crates/tola-node/tests/p9_ethereum_conformance_test.rs):
 - Added `test_p9_canonical_evm_call_depth_1024_boundary` (104 lines of code).
 - Updated documentation comments on `test_p9_canonical_gst_call_depth_limits` to clarify that it serves as a shallow recursion regression test (depth 5).
 - Zero modifications to production source code or unrelated tests.

@@ -22,8 +22,8 @@ In accordance with Phase 1 governance rules, no historical ADR has been silently
 ---
 
 ## 3. Register of New Enacted ADRs (Phase 1)
-- [**ADR-0008**](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/decisions/ADR-0008-storage-engine-selection-mdbx-and-append-only-log.md): Storage Engine Selection: MDBX for State and Append-Only Logs for History
-- [**ADR-0009**](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/decisions/ADR-0009-pipelined-bft-consensus-and-realistic-block-timing.md): Pipelined BFT Consensus (HotStuff/Jolteon) and Realistic 2.0s Block Timing
-- [**ADR-0010**](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/decisions/ADR-0010-state-commitment-jellyfish-merkle-tree.md): State Commitment Scheme: Jellyfish Merkle Tree (JMT) with BLAKE3 Hashing
-- [**ADR-0011**](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/decisions/ADR-0011-cryptographic-identity-and-privacy-roadmap.md): Cryptographic Identity Primitives (CIP) & Phased Privacy Roadmap
-- [**ADR-0012**](file:///c:/Users/anvar/Downloads/TOLA%20NETWORK/decisions/ADR-0012-execution-pipeline-block-stm-parallelism.md): Parallel Execution Pipeline: Block-STM Optimistic Concurrency
+- [**ADR-0008**](./ADR-0008-storage-engine-selection-mdbx-and-append-only-log.md): Storage Engine Selection: MDBX for State and Append-Only Logs for History
+- [**ADR-0009**](./ADR-0009-pipelined-bft-consensus-and-realistic-block-timing.md): Pipelined BFT Consensus (HotStuff/Jolteon) and Realistic 2.0s Block Timing
+- [**ADR-0010**](./ADR-0010-state-commitment-jellyfish-merkle-tree.md): State Commitment Scheme: Jellyfish Merkle Tree (JMT) with BLAKE3 Hashing
+- [**ADR-0011**](./ADR-0011-cryptographic-identity-and-privacy-roadmap.md): Cryptographic Identity Primitives (CIP) & Phased Privacy Roadmap
+- [**ADR-0012**](./ADR-0012-execution-pipeline-block-stm-parallelism.md): Parallel Execution Pipeline: Block-STM Optimistic Concurrency
