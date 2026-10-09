@@ -5,5 +5,12 @@ edition = "2021"
 
 [dependencies]
 tola-types = { path = "../tola-types" }
+tola-codec = { path = "../tola-codec" }
+tola-crypto = { path = "../tola-crypto" }
 tola-core = { path = "../tola-core" }
 tola-state = { path = "../tola-state" }
+revm = { version = "43.0.3", default-features = false, features = ["std"] }
+
+[dev-dependencies]
+hex = "0.4"
+

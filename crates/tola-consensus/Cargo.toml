@@ -6,4 +6,9 @@ edition = "2021"
 [dependencies]
 tola-types = { path = "../tola-types" }
 tola-crypto = { path = "../tola-crypto" }
+tola-codec = { path = "../tola-codec" }
 tola-core = { path = "../tola-core" }
+
+[dev-dependencies]
+tola-state = { path = "../tola-state" }
+

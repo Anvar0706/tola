@@ -1,0 +1,56 @@
+{
+  "chain_id": 9999,
+  "genesis_time": 1770000000,
+  "accounts": [
+    {
+      "address": "0x2121212121212121212121212121212121212121",
+      "balance": "200000000000000000000000000"
+    },
+    {
+      "address": "0x4444444444444444444444444444444444444444",
+      "balance": "100000000000000000000000000"
+    },
+    {
+      "address": "0x2020202020202020202020202020202020202020",
+      "balance": "200000000000000000000000000"
+    },
+    {
+      "address": "0x1111111111111111111111111111111111111111",
+      "balance": "300000000000000000000000000"
+    },
+    {
+      "address": "0x3333333333333333333333333333333333333333",
+      "balance": "100000000000000000000000000"
+    },
+    {
+      "address": "0x2222222222222222222222222222222222222222",
+      "balance": "100000000000000000000000000"
+    }
+  ],
+  "validators": [
+    {
+      "validator_id": "0xaaaa11111111111111111111111111111111aaaa",
+      "consensus_pubkey": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "voting_power": 10000,
+      "commission_bp": 500
+    },
+    {
+      "validator_id": "0xbbbb22222222222222222222222222222222bbbb",
+      "consensus_pubkey": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "voting_power": 10000,
+      "commission_bp": 500
+    },
+    {
+      "validator_id": "0xcccc33333333333333333333333333333333cccc",
+      "consensus_pubkey": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "voting_power": 10000,
+      "commission_bp": 500
+    },
+    {
+      "validator_id": "0xdddd44444444444444444444444444444444dddd",
+      "consensus_pubkey": "0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "voting_power": 10000,
+      "commission_bp": 500
+    }
+  ]
+}

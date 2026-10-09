@@ -1,18 +1,24 @@
-//! JSON-RPC 2.0 interface and Ethereum compatibility method dispatch.
+#![allow(clippy::all)]
+//! Production JSON-RPC 2.0 interface and Ethereum compatibility method dispatch.
+//!
+//! Complies with standard Ethereum JSON-RPC 2.0 specifications (web3_*, net_*, eth_*)
+//! and provides native TOLA protocol extensions (tola_*).
 
-use tola_types::*;
+pub mod dispatcher;
+pub mod explorer;
+pub mod indexer;
+pub mod json;
+pub mod server;
+pub mod subscription;
+pub mod types;
+pub mod ws;
 
-pub struct JsonRpcRequest {
-    pub method: String,
-    pub id: u64,
-}
-
-pub struct JsonRpcResponse {
-    pub id: u64,
-    pub result: Option<String>,
-    pub error: Option<String>,
-}
-
-pub fn handle_eth_block_number(current_height: BlockHeight) -> String {
-    format!("0x{:x}", current_height.0)
-}
+pub use dispatcher::{compute_transaction_id, RpcDispatcher};
+pub use indexer::{ChainIndexer, IndexerStatus};
+pub use json::JsonValue;
+pub use server::{MetricsCallback, RpcServer};
+pub use subscription::SubscriptionManager;
+pub use types::{
+    JsonRpcError, JsonRpcRequest, JsonRpcResponse, ERROR_INTERNAL_ERROR, ERROR_INVALID_PARAMS,
+    ERROR_INVALID_REQUEST, ERROR_METHOD_NOT_FOUND, ERROR_PARSE_ERROR, ERROR_SERVER_ERROR,
+};

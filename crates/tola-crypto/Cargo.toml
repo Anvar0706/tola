@@ -5,3 +5,12 @@ edition = "2021"
 
 [dependencies]
 tola-types = { path = "../tola-types" }
+blake3 = { version = "1.5", default-features = false }
+sha2 = { version = "0.10", default-features = false }
+sha3 = { version = "0.10", default-features = false }
+ed25519-dalek = { version = "2.1", default-features = false, features = ["std", "rand_core"] }
+k256 = { version = "0.13", default-features = false, features = ["ecdsa", "arithmetic", "std"] }
+zeroize = { version = "1.8", features = ["derive"] }
+rand_core = { version = "0.6", features = ["std"] }
+bip39 = { version = "2.0", default-features = false, features = ["rand", "std", "unicode-normalization"] }
+bip32 = { version = "0.5", default-features = false, features = ["secp256k1", "alloc", "std"] }

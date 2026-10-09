@@ -1,38 +1,19 @@
-//! Priority queue mempool, nonce sequence validation, and anti-DDoS eviction.
+#![allow(clippy::all)]
+//! Transaction mempool, fee prioritization, and Block-STM dependency spreading for TOLA Network.
+//!
+//! Complies with Subsystem Prompt 11 and ADR-0012:
+//! - Multi-level Ready and Parked transaction pools
+//! - Replace-By-Fee (RBF) escalation checks
+//! - Anti-DDoS eviction and memory cap enforcement
+//! - Block assembler with target address interleaving to maximize parallel execution throughput
 
-use std::collections::VecDeque;
-use tola_types::*;
-use tola_core::MempoolError;
+pub mod assembler;
+pub mod config;
+pub mod pool;
 
-pub struct Mempool {
-    queue: VecDeque<Transaction>,
-    max_capacity: usize,
-}
-
-impl Mempool {
-    pub fn new(max_capacity: usize) -> Self {
-        Self {
-            queue: VecDeque::new(),
-            max_capacity,
-        }
-    }
-
-    pub fn insert(&mut self, tx: Transaction) -> Result<TransactionId, MempoolError> {
-        if self.queue.len() >= self.max_capacity {
-            return Err(MempoolError::PoolFull);
-        }
-        self.queue.push_back(tx);
-        Ok(TransactionId(Hash::ZERO))
-    }
-
-    pub fn pop_batch(&mut self, max_count: usize) -> Vec<Transaction> {
-        let mut batch = Vec::new();
-        while let Some(tx) = self.queue.pop_front() {
-            batch.push(tx);
-            if batch.len() >= max_count {
-                break;
-            }
-        }
-        batch
-    }
-}
+// Re-export primary types for public consumption
+pub use assembler::BlockAssembler;
+pub use config::{
+    MempoolConfig, MempoolStats, DEFAULT_MAX_MEMPOOL_BYTES, DEFAULT_MAX_TRANSACTIONS,
+};
+pub use pool::{compute_tx_digest, compute_tx_id, AccountQueue, Mempool, PriorityEntry};

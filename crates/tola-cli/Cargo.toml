@@ -1,0 +1,16 @@
+[package]
+name = "tola-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tola-types = { path = "../tola-types" }
+tola-codec = { path = "../tola-codec" }
+tola-crypto = { path = "../tola-crypto" }
+tola-core = { path = "../tola-core" }
+tola-state = { path = "../tola-state" }
+tola-rpc = { path = "../tola-rpc" }
+tola-node = { path = "../tola-node" }
+tola-sdk = { path = "../tola-sdk" }
+zeroize = "1.8"
+hex = "0.4"

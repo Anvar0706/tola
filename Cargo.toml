@@ -12,5 +12,7 @@ members = [
     "crates/tola-p2p",
     "crates/tola-rpc",
     "crates/tola-node",
+    "crates/tola-cli",
+    "crates/tola-sdk",
 ]
 resolver = "2"

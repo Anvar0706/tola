@@ -344,6 +344,7 @@ fn test_p9_dynamic_block_gas_limit_canonical_execution() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -371,6 +372,7 @@ fn test_p9_dynamic_block_gas_limit_canonical_execution() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call1, _) = sign_eth_tx(&kp, call_tx1);
     let (_, receipts2) = harness.commit_block_with_gas_limit(vec![signed_call1], Gas(15_000_000));
@@ -402,6 +404,7 @@ fn test_p9_dynamic_block_gas_limit_canonical_execution() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call2, _) = sign_eth_tx(&kp, call_tx2);
     let (_, receipts3) = harness.commit_block_with_gas_limit(vec![signed_call2], Gas(45_000_000));
@@ -444,6 +447,7 @@ fn test_p9_dynamic_block_gas_limit_historical_simulation() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -469,6 +473,7 @@ fn test_p9_dynamic_block_gas_limit_historical_simulation() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dummy, _) = sign_eth_tx(&kp, dummy_tx);
     harness.commit_block_with_gas_limit(vec![signed_dummy], Gas(50_000_000));
@@ -533,6 +538,7 @@ fn test_p9_block_level_base_fee_validation_rejects_underpriced_evm_tx() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_tx, _) = sign_eth_tx(&kp, underpriced_evm_tx);
 
@@ -588,6 +594,7 @@ fn test_p9_block_level_base_fee_validation_accepts_valid_evm_tx() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_tx, _) = sign_eth_tx(&kp, valid_evm_tx);
 
@@ -639,6 +646,7 @@ fn test_p9_block_level_base_fee_validation_native_tx_isolation() {
         memo: None,
         signature: Signature::Ed25519([0; 64]), // Dummy non-EVM signature for stateless check
         tx_type: 0,
+        access_list: vec![],
     };
 
     let block = Block {
@@ -694,6 +702,7 @@ fn test_p9_eip3860_initcode_size_boundary_49151_49152_49153() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     assert!(tx_49151
         .stateless_validate(TEST_CHAIN_ID, Gas(30_000_000))
@@ -719,6 +728,7 @@ fn test_p9_eip3860_initcode_size_boundary_49151_49152_49153() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     assert!(tx_49152
         .stateless_validate(TEST_CHAIN_ID, Gas(30_000_000))
@@ -744,6 +754,7 @@ fn test_p9_eip3860_initcode_size_boundary_49151_49152_49153() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     assert_eq!(
         tx_49153.stateless_validate(TEST_CHAIN_ID, Gas(30_000_000)),
@@ -780,6 +791,7 @@ fn test_p9_eip3860_non_creation_call_above_49152_permitted() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     assert!(tx_call_50000
         .stateless_validate(TEST_CHAIN_ID, Gas(30_000_000))
@@ -805,6 +817,7 @@ fn test_p9_eip3860_non_creation_call_above_49152_permitted() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     assert!(tx_call_65536
         .stateless_validate(TEST_CHAIN_ID, Gas(30_000_000))
@@ -941,6 +954,7 @@ fn test_p9_canonical_gst_arithmetic_modulo_edge_cases() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -968,6 +982,7 @@ fn test_p9_canonical_gst_arithmetic_modulo_edge_cases() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call, _) = sign_eth_tx(&kp, call_tx);
     let (_, call_receipts) = harness.commit_block(vec![signed_call]);
@@ -1055,6 +1070,7 @@ fn test_p9_canonical_gst_memory_expansion_quadratic_gas() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -1080,6 +1096,7 @@ fn test_p9_canonical_gst_memory_expansion_quadratic_gas() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call1, _) = sign_eth_tx(&kp, call1);
     let (_, r1) = harness.commit_block(vec![signed_call1]);
@@ -1105,6 +1122,7 @@ fn test_p9_canonical_gst_memory_expansion_quadratic_gas() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call2, _) = sign_eth_tx(&kp, call2);
     let (_, r2) = harness.commit_block(vec![signed_call2]);
@@ -1130,6 +1148,7 @@ fn test_p9_canonical_gst_memory_expansion_quadratic_gas() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call3, _) = sign_eth_tx(&kp, call3);
     let (_, r3) = harness.commit_block(vec![signed_call3]);
@@ -1181,6 +1200,7 @@ fn test_p9_canonical_gst_stack_depth_limits() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_ok, _) = sign_eth_tx(&kp, deploy_ok_tx);
     let (_, r_ok) = harness.commit_block(vec![signed_ok]);
@@ -1211,6 +1231,7 @@ fn test_p9_canonical_gst_stack_depth_limits() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_overflow, _) = sign_eth_tx(&kp, deploy_overflow_tx);
     let (_, r_overflow) = harness.commit_block(vec![signed_overflow]);
@@ -1239,6 +1260,7 @@ fn test_p9_canonical_gst_stack_depth_limits() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_underflow, _) = sign_eth_tx(&kp, deploy_underflow_tx);
     let (_, r_underflow) = harness.commit_block(vec![signed_underflow]);
@@ -1288,6 +1310,7 @@ fn test_p9_canonical_gst_call_depth_limits() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -1314,6 +1337,7 @@ fn test_p9_canonical_gst_call_depth_limits() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call5, _) = sign_eth_tx(&kp, call_5);
     let (_, r_call5) = harness.commit_block(vec![signed_call5]);
@@ -1369,6 +1393,7 @@ fn test_p9_canonical_evm_call_depth_1024_boundary() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -1397,6 +1422,7 @@ fn test_p9_canonical_evm_call_depth_1024_boundary() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call, _) = sign_eth_tx(&kp, call_boundary);
     let (_, receipts) = harness.commit_block_with_gas_limit(vec![signed_call], boundary_gas);
@@ -1461,6 +1487,7 @@ fn test_p9_canonical_gst_create_collision_and_eip170_code_limit() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_ok, _) = sign_eth_tx(&kp, deploy_ok);
     let (_, r_ok) = harness.commit_block(vec![signed_ok]);
@@ -1489,6 +1516,7 @@ fn test_p9_canonical_gst_create_collision_and_eip170_code_limit() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_fail, _) = sign_eth_tx(&kp, deploy_fail);
     let (_, r_fail) = harness.commit_block(vec![signed_fail]);
@@ -1536,6 +1564,7 @@ fn test_p9_canonical_gst_revert_propagation_and_gas_bubbling() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_child, _) = sign_eth_tx(&kp, deploy_child);
     let child_addr = compute_contract_address(&sender, 0);
@@ -1576,6 +1605,7 @@ fn test_p9_canonical_gst_revert_propagation_and_gas_bubbling() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_parent, _) = sign_eth_tx(&kp, deploy_parent);
     let parent_addr = compute_contract_address(&sender, 1);
@@ -1601,6 +1631,7 @@ fn test_p9_canonical_gst_revert_propagation_and_gas_bubbling() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call, _) = sign_eth_tx(&kp, call_tx);
     let (_, r_call) = harness.commit_block(vec![signed_call]);
@@ -1664,6 +1695,7 @@ fn test_p9_tier2_revm_diagnostic_oracle_arithmetic_equivalence() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
 
     // 1. Run on TOLA EVM
@@ -1805,6 +1837,7 @@ fn test_p9_tier2_revm_diagnostic_oracle_state_mutation_equivalence() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
 
     // 1. TOLA EVM
@@ -1954,6 +1987,7 @@ fn test_p9_regression_p5_equal_fee_persistence() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_tx, eth_hash) = sign_eth_tx(&kp, equal_fee_tx);
     let (_, receipts) = harness.commit_block(vec![signed_tx]);
@@ -2019,6 +2053,7 @@ fn test_p9_regression_p7_solidity_and_precompiles() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_deploy, _) = sign_eth_tx(&kp, deploy_tx);
     let erc20_addr = compute_contract_address(&sender, 0);
@@ -2050,6 +2085,7 @@ fn test_p9_regression_p7_solidity_and_precompiles() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_mint, _) = sign_eth_tx(&kp, mint_tx);
     let (_, r_mint) = harness.commit_block(vec![signed_mint]);
@@ -2172,6 +2208,7 @@ fn test_p9_regression_p8_historical_state_queries() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -2197,6 +2234,7 @@ fn test_p9_regression_p8_historical_state_queries() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call1, _) = sign_eth_tx(&kp, call1);
     harness.commit_block(vec![signed_call1]);
@@ -2221,6 +2259,7 @@ fn test_p9_regression_p8_historical_state_queries() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_call2, _) = sign_eth_tx(&kp, call2);
     harness.commit_block(vec![signed_call2]);
@@ -2290,6 +2329,7 @@ fn test_p9_regression_cold_restart_persistence() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -2582,6 +2622,7 @@ fn run_official_shanghai_fixture_json(json_content: &str) {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
 
     let (signed_tx, _) = sign_eth_tx(&kp, tx);
@@ -2622,30 +2663,70 @@ fn run_official_shanghai_fixture_json(json_content: &str) {
                 let db = harness.state_arc.read().unwrap();
                 for (addr_str, acct_val) in post_entries {
                     let addr = Address::from_hex(addr_str).expect("Valid post account address");
-                    let _actual_acct = db
+                    let actual_acct = db
                         .get_account(&addr)
                         .unwrap()
                         .unwrap_or(AccountState::EMPTY);
                     if let JsonValue::Object(acct_fields) = acct_val {
                         for (ak, av) in acct_fields {
-                            if ak == "storage" {
-                                if let JsonValue::Object(st_entries) = av {
-                                    for (sk, sv) in st_entries {
-                                        let slot_arr = safe_hex_decode_32(sk);
-                                        let expected_val_arr =
-                                            safe_hex_decode_32(sv.as_str().unwrap());
-                                        let actual_val =
-                                            db.get_storage(&addr, &Hash(slot_arr)).unwrap();
+                            match ak.as_str() {
+                                "nonce" => {
+                                    let expected_nonce = parse_json_hex_u64(av, 0);
+                                    assert_eq!(
+                                        actual_acct.nonce.0, expected_nonce,
+                                        "Fixture {}: Nonce mismatch at {}",
+                                        fixture_name, addr_str
+                                    );
+                                }
+                                "code" => {
+                                    if let Some(s) = av.as_str() {
+                                        let expected_code = hex_decode(s);
+                                        let actual_code = if actual_acct.code_hash == Hash::ZERO {
+                                            Vec::new()
+                                        } else {
+                                            db.get_code(&actual_acct.code_hash)
+                                                .unwrap()
+                                                .unwrap_or_default()
+                                        };
                                         assert_eq!(
-                                            actual_val,
-                                            Hash(expected_val_arr),
-                                            "Fixture {}: Storage mismatch at {} slot {}",
-                                            fixture_name,
-                                            addr_str,
-                                            sk
+                                            actual_code, expected_code,
+                                            "Fixture {}: Code mismatch at {}",
+                                            fixture_name, addr_str
                                         );
                                     }
                                 }
+                                "storage" => {
+                                    if let JsonValue::Object(st_entries) = av {
+                                        for (sk, sv) in st_entries {
+                                            let slot_arr = safe_hex_decode_32(sk);
+                                            let expected_val_arr =
+                                                safe_hex_decode_32(sv.as_str().unwrap());
+                                            let actual_val =
+                                                db.get_storage(&addr, &Hash(slot_arr)).unwrap();
+                                            assert_eq!(
+                                                actual_val,
+                                                Hash(expected_val_arr),
+                                                "Fixture {}: Storage mismatch at {} slot {}",
+                                                fixture_name,
+                                                addr_str,
+                                                sk
+                                            );
+                                        }
+                                    }
+                                }
+                                "balance" => {
+                                    if addr != sender {
+                                        let expected_bal = parse_json_hex_u128(av, 0);
+                                        assert_eq!(
+                                            actual_acct.balance.as_u128(),
+                                            expected_bal,
+                                            "Fixture {}: Balance mismatch at {}",
+                                            fixture_name,
+                                            addr_str
+                                        );
+                                    }
+                                }
+                                _ => {}
                             }
                         }
                     }
@@ -2769,6 +2850,7 @@ fn test_p9_sim_gas_omitted_defaults_to_block_gas_limit() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -2830,6 +2912,7 @@ fn test_p9_sim_gas_explicit_within_limit() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -2876,6 +2959,7 @@ fn test_p9_sim_gas_explicit_exceeds_block_gas_limit() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -2932,6 +3016,7 @@ fn test_p9_sim_gas_explicit_exceeds_block_gas_limit() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let state = harness.state_arc.read().unwrap();
     let sim_res = EvmExecutor::simulate_call(
@@ -2979,6 +3064,7 @@ fn test_p9_sim_gas_execution_out_of_gas() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -3027,6 +3113,7 @@ fn test_p9_sim_gas_historical_block_context() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_dep, _) = sign_eth_tx(&kp, deploy_tx);
     let contract_addr = compute_contract_address(&sender, 0);
@@ -3096,6 +3183,7 @@ fn test_p9_sim_gas_canonical_block_strict_enforcement() {
             chain_id: TEST_CHAIN_ID.0,
         },
         tx_type: 2,
+        access_list: vec![],
     };
     let (signed_tx, _) = sign_eth_tx(&kp, overlimit_tx);
 
