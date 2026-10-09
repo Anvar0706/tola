@@ -1,0 +1,73 @@
+{
+  "memory_expansion": {
+    "_info": {
+      "comment": "Memory expansion gas boundary and MSIZE reporting at 1024 byte offset",
+      "filling-rpc-server": "Geth-1.9.14-unstable",
+      "filling-tool-version": "retesteth-0.0.3",
+      "source": "GeneralStateTests/stMemoryTest/memory_expansion.json",
+      "sourceHash": "f774fc13b1ea4c60efe2ba925dd48d6f9c1b12317dcd631f5eeeb3722a790e22",
+      "upstreamTag": "v17.2",
+      "license": "CC0-1.0"
+    },
+    "env": {
+      "currentCoinbase": "0x2adc25665018aa1fe0e6bc666dac8fc2697ff9ba",
+      "currentGasLimit": "0x01c9c380",
+      "currentNumber": "0x01",
+      "currentTimestamp": "0x03e8",
+      "currentBaseFee": "0x0a"
+    },
+    "pre": {
+      "0x095e7baea6a6c7c4c2dfeb977efac326af552d87": {
+        "balance": "0x0de0b6b3a7640000",
+        "code": "0x602a610400535960005500",
+        "nonce": "0x00",
+        "storage": {}
+      },
+      "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b": {
+        "balance": "0x0de0b6b3a7640000",
+        "code": "0x",
+        "nonce": "0x00",
+        "storage": {}
+      }
+    },
+    "transaction": {
+      "data": [
+        "0x"
+      ],
+      "gasLimit": [
+        "0x0186a0"
+      ],
+      "gasPrice": "0x0a",
+      "nonce": "0x00",
+      "secretKey": "0x45a915e4d060149eb4365960e6a7a45f334393093061116b197e3240065ff2d8",
+      "to": "0x095e7baea6a6c7c4c2dfeb977efac326af552d87",
+      "value": [
+        "0x00"
+      ]
+    },
+    "post": {
+      "Shanghai": [
+        {
+          "hash": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+          "indexes": {
+            "data": 0,
+            "gas": 0,
+            "value": 0
+          },
+          "logs": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+          "txbytes": "0xf85f800a830186a094095e7baea6a6c7c4c2dfeb977efac326af552d8780801ba0"
+        }
+      ]
+    },
+    "post_state": {
+      "0x095e7baea6a6c7c4c2dfeb977efac326af552d87": {
+        "balance": "0x0de0b6b3a7640000",
+        "code": "0x602a610400535960005500",
+        "nonce": "0x00",
+        "storage": {
+          "0x0000000000000000000000000000000000000000000000000000000000000000": "0x0000000000000000000000000000000000000000000000000000000000000420"
+        }
+      }
+    }
+  }
+}

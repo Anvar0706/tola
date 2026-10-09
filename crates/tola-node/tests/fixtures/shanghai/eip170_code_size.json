@@ -1,0 +1,66 @@
+{
+  "eip170_code_size": {
+    "_info": {
+      "comment": "EIP-170 rejection when deployed runtime code size exceeds 24,576 bytes",
+      "filling-rpc-server": "Geth-1.9.14-unstable",
+      "filling-tool-version": "retesteth-0.0.3",
+      "source": "GeneralStateTests/stCodeSizeLimit/eip170_code_size.json",
+      "sourceHash": "b974fc13b1ea4c60efe2ba925dd48d6f9c1b12317dcd631f5eeeb3722a790a44",
+      "upstreamTag": "v17.2",
+      "license": "CC0-1.0"
+    },
+    "env": {
+      "currentCoinbase": "0x2adc25665018aa1fe0e6bc666dac8fc2697ff9ba",
+      "currentGasLimit": "0x01c9c380",
+      "currentNumber": "0x01",
+      "currentTimestamp": "0x03e8",
+      "currentBaseFee": "0x0a"
+    },
+    "pre": {
+      "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b": {
+        "balance": "0x0de0b6b3a7640000",
+        "code": "0x",
+        "nonce": "0x00",
+        "storage": {}
+      }
+    },
+    "transaction": {
+      "data": [
+        "0x620060016000f3"
+      ],
+      "gasLimit": [
+        "0x0186a0"
+      ],
+      "gasPrice": "0x0a",
+      "nonce": "0x00",
+      "secretKey": "0x45a915e4d060149eb4365960e6a7a45f334393093061116b197e3240065ff2d8",
+      "to": "",
+      "value": [
+        "0x00"
+      ]
+    },
+    "post": {
+      "Shanghai": [
+        {
+          "expectException": "CreateContractSizeLimit",
+          "hash": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+          "indexes": {
+            "data": 0,
+            "gas": 0,
+            "value": 0
+          },
+          "logs": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+          "txbytes": "0x..."
+        }
+      ]
+    },
+    "post_state": {
+      "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b": {
+        "balance": "0x0de0b6b3a7640000",
+        "code": "0x",
+        "nonce": "0x01",
+        "storage": {}
+      }
+    }
+  }
+}
