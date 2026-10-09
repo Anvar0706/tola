@@ -1,0 +1,87 @@
+name: TOLA Network CI
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  lint-and-format:
+    name: Code Formatting & Clippy Lints
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Check Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run Clippy Linter
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+  test:
+    name: Workspace Test Suite & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Workspace Tests
+        run: cargo test --workspace --all-targets --all-features --verbose
+
+  docker-build:
+    name: Docker Container Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build tola-node Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: tola-node:ci-test
+
+  sdk-typescript-test:
+    name: TypeScript SDK Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run TypeScript SDK Tests
+        working-directory: sdk/typescript
+        run: npm test
+
+  sdk-python-test:
+    name: Python SDK Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Python SDK
+        working-directory: sdk/python
+        run: pip install -e .
+      - name: Run Python SDK Tests
+        working-directory: sdk/python
+        run: python -m unittest discover -s tests

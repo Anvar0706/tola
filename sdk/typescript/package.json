@@ -1,0 +1,62 @@
+{
+  "name": "@tola/sdk",
+  "version": "0.1.0",
+  "description": "Official cross-platform TypeScript SDK and Web3 Provider for TOLA Network",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./address": {
+      "import": "./dist/address.js",
+      "types": "./dist/address.d.ts"
+    },
+    "./crypto": {
+      "import": "./dist/crypto/index.js",
+      "types": "./dist/crypto/index.d.ts"
+    },
+    "./transaction": {
+      "import": "./dist/transaction.js",
+      "types": "./dist/transaction.d.ts"
+    },
+    "./provider": {
+      "import": "./dist/provider.js",
+      "types": "./dist/provider.d.ts"
+    },
+    "./wallet": {
+      "import": "./dist/wallet.js",
+      "types": "./dist/wallet.d.ts"
+    },
+    "./connect": {
+      "import": "./dist/connect/index.js",
+      "types": "./dist/connect/index.d.ts"
+    },
+    "./external": {
+      "import": "./dist/external/index.js",
+      "types": "./dist/external/index.d.ts"
+    },
+    "./sharding": {
+      "import": "./dist/sharding.js",
+      "types": "./dist/sharding.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "node --test test/sdk.test.mjs"
+  },
+  "keywords": [
+    "tola",
+    "blockchain",
+    "sdk",
+    "web3",
+    "ethereum",
+    "bft",
+    "eip-1193",
+    "telegram-mini-app"
+  ],
+  "author": "TOLA Network Core Contributors",
+  "license": "Apache-2.0"
+}

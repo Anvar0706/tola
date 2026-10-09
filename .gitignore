@@ -1,3 +1,18 @@
 /target
 **/*.rs.bk
 Cargo.lock
+
+# Runtime and local state
+/data/
+*.db
+
+# Python bytecode & cache
+__pycache__/
+*.pyc
+
+# Node / JS dependencies
+node_modules/
+
+# Python packaging
+*.egg-info/
+.pytest_cache/
