@@ -1,6 +1,6 @@
 # TOLA Network Web3 Provider Integration (EIP-1193)
 
-Comprehensive guide for integrating TOLA Network with Web3 wallets, dApps, Telegram Mini Apps, and standard Ethereum provider tooling.
+Comprehensive guide for integrating TOLA Network with Web3 wallets, dApps, embedded web applications, and standard Ethereum provider tooling.
 
 ---
 

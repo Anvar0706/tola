@@ -1270,14 +1270,14 @@ class TestTolaSdk(unittest.TestCase):
         self.assertEqual(ExternalAssetType.DIGITAL_COLLECTIBLE.value, "DIGITAL_COLLECTIBLE")
         self.assertEqual(ExternalAssetType.OTHER_EXTERNAL_ASSET.value, "OTHER_EXTERNAL_ASSET")
 
-        canon1 = compute_external_asset_canonical_id("PaxtaGram", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
-        canon2 = compute_external_asset_canonical_id("PaxtaGram", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
+        canon1 = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
+        canon2 = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
         self.assertEqual(canon1, canon2)
 
-        canon_diff_plat = compute_external_asset_canonical_id("Telegram", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
+        canon_diff_plat = compute_external_asset_canonical_id("SocialAppB", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
         self.assertNotEqual(canon1, canon_diff_plat)
 
-        canon_diff_type = compute_external_asset_canonical_id("PaxtaGram", ExternalAssetType.SOCIAL_USERNAME, "@anvar")
+        canon_diff_type = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.SOCIAL_USERNAME, "@anvar")
         self.assertNotEqual(canon1, canon_diff_type)
 
     def test_absence_of_native_identity_and_gifts_in_python_sdk(self):

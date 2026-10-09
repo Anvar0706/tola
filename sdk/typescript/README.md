@@ -2,7 +2,7 @@
 
 Official cross-platform TypeScript SDK and Web3 Provider for the **TOLA Network**.
 
-Supports Node.js, Web browsers, React Native, and Telegram Mini Apps.
+Supports Node.js, Web browsers, React Native, and embedded web applications.
 
 ---
 
@@ -23,8 +23,8 @@ Supports Node.js, Web browsers, React Native, and Telegram Mini Apps.
 - **Provider & Web3 Tooling**:
   - `JsonRpcProvider` for typed RPC queries, block headers, state queries, and transaction broadcasting.
   - EIP-1193 compliant `TolaProvider` for seamless integration into Ethereum/Web3 libraries (ethers.js, viem, web3.js).
-- **TOLA Connect & Mini Apps**:
-  - Non-custodial Mini App Bridge (`MiniAppBridge` / `TelegramMiniAppBridge`).
+- **Optional Application Integration (TOLA Connect)**:
+  - Non-custodial, platform-neutral Mini App Bridge (`MiniAppBridge`).
   - E2EE session management with ECDH + AES-256-GCM.
   - Mandatory clear-signing prompts with bounds checking and domain binding.
   - Multi-device authorization and revocation registry (`DeviceRegistry`).
@@ -113,7 +113,7 @@ const accounts = await provider.request({ method: 'eth_accounts' });
 console.log('Connected accounts:', accounts);
 ```
 
-### 5. Telegram Mini App & Clear-Signing Bridge
+### 5. Mini App & Clear-Signing Bridge
 
 ```typescript
 import { MiniAppBridge, TolaWallet } from '@tola/sdk';

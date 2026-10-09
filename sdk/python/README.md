@@ -2,7 +2,7 @@
 
 Official Python client SDK and bot tooling for the **TOLA Network**.
 
-Pure Python implementation designed for backend automation, Telegram bots, algorithmic services, and testing infrastructure.
+Pure Python implementation designed for backend automation, automated bots, algorithmic services, and testing infrastructure.
 
 ---
 
@@ -22,7 +22,7 @@ Pure Python implementation designed for backend automation, Telegram bots, algor
 - **Client & JSON-RPC Communication**:
   - `TolaClient` for communicating with TOLA node RPC endpoints.
   - Standard queries: block height, balances, nonces, raw transaction submission, receipts, health checks.
-- **TOLA Connect & Bot Infrastructure**:
+- **Optional Application & Bot Infrastructure (TOLA Connect)**:
   - `ClearSigningPrompt` verification and human-readable summarization.
   - Multi-device authorization and revocation management (`DeviceRegistry`).
   - Encrypted end-to-end session protocol (`TolaConnectSession`).
@@ -106,7 +106,7 @@ nonce = client.get_nonce(address)
 print(f"Balance: {balance} nanoTOLA, Nonce: {nonce}")
 ```
 
-### 4. Telegram Bot Integration Example
+### 4. Bot & Automation Integration Example
 
 ```python
 from tola import TolaClient, TolaWallet, TransactionBuilder, ClearSigningPrompt
@@ -123,7 +123,7 @@ prompt = ClearSigningPrompt(
 )
 
 prompt.validate()
-print("Clear sign summary:", prompt.to_summary())
+print("Clear sign summary:", prompt.format_summary())
 ```
 
 ---

@@ -3,7 +3,7 @@
 ## Overview & Scope
 Official developer client SDKs for TOLA Network providing typed, secure, and ergonomic access to wallet management, transaction composition, cryptographic signing, and node communication across multiple programming environments:
 
-1. **TypeScript SDK (`@tola/sdk`):** Designed for Node.js, Web browsers, React Native, and Telegram Mini Apps with EIP-1193 provider support.
+1. **TypeScript SDK (`@tola/sdk`):** Designed for Node.js, Web browsers, React Native, and embedded web applications with EIP-1193 provider support.
    - [TypeScript SDK Guide & API Reference](./typescript-sdk.md)
    - [Web3 Provider (EIP-1193) Integration](./web3-provider.md)
 2. **Python SDK (`tola`):** Pure Python standard library implementation for bots, backend automation, and algorithmic infrastructure.

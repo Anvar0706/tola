@@ -40,7 +40,6 @@ import {
   validateClearSigningPrompt,
   formatClearSigningSummary,
   TolaConnectSession,
-  TelegramMiniAppBridge,
   MiniAppBridge,
   ConnectMessageType,
   DeviceRegistry,
@@ -250,12 +249,12 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
     assert.deepEqual(JSON.parse(decrypted), secretPayload);
   });
 
-  test('TOLA Connect: Telegram Mini App Bridge payment approval & rejection', async () => {
+  test('TOLA Connect: Mini App Bridge payment approval & rejection', async () => {
     const wallet = TolaWallet.generate();
     let promptSeen = null;
 
     // Bridge with user approval
-    const bridgeApproving = new TelegramMiniAppBridge(wallet, {
+    const bridgeApproving = new MiniAppBridge(wallet, {
       onClearSign: async (prompt) => {
         promptSeen = prompt;
         return true;
@@ -275,7 +274,7 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
     assert.equal(promptSeen.domain, 'miniapp.tola.network');
 
     // Bridge with user rejection
-    const bridgeRejecting = new TelegramMiniAppBridge(wallet, {
+    const bridgeRejecting = new MiniAppBridge(wallet, {
       onClearSign: async () => false,
     });
     await assert.rejects(
@@ -333,7 +332,7 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       const deviceReg = new DeviceRegistry();
       deviceReg.registerDevice('phone_1', 'My Phone');
 
-      const bridge = new TelegramMiniAppBridge(wallet, {
+      const bridge = new MiniAppBridge(wallet, {
         expectedDomain: 'dex.tola.network',
         deviceRegistry: deviceReg,
         chainId: 9999n,
@@ -1146,14 +1145,14 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.DIGITAL_COLLECTIBLE], 7);
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.OTHER_EXTERNAL_ASSET], 8);
 
-      const canon1 = computeExternalAssetCanonicalId('PaxtaGram', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
-      const canon2 = computeExternalAssetCanonicalId('PaxtaGram', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
+      const canon1 = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
+      const canon2 = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
       assert.deepEqual(canon1, canon2);
 
-      const canonDiffPlatform = computeExternalAssetCanonicalId('Telegram', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
+      const canonDiffPlatform = computeExternalAssetCanonicalId('SocialAppB', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
       assert.notDeepEqual(canon1, canonDiffPlatform);
 
-      const canonDiffType = computeExternalAssetCanonicalId('PaxtaGram', ExternalAssetType.SOCIAL_USERNAME, '@anvar');
+      const canonDiffType = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.SOCIAL_USERNAME, '@anvar');
       assert.notDeepEqual(canon1, canonDiffType);
     });
 
@@ -1167,6 +1166,7 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       assert.equal(sdk.signBadgeAttestation, undefined);
       assert.equal(sdk.verifyBadgeAttestation, undefined);
       assert.equal(sdk.validateTLS721Metadata, undefined);
+      assert.equal(sdk.TelegramMiniAppBridge, undefined);
     });
 
     test('External Asset Attestation Signing, Replay & Expiry Defenses', async () => {
@@ -1219,17 +1219,15 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
       );
     });
 
-    test('MiniAppBridge Generalization and TelegramMiniAppBridge Compatibility', async () => {
+    test('Platform-Neutral MiniAppBridge and Absence of TelegramMiniAppBridge', async () => {
       const wallet = TolaWallet.generate();
       const miniBridge = new MiniAppBridge(wallet);
       const accounts = await miniBridge.requestAccounts();
       assert.equal(accounts[0], wallet.address.toBech32m());
 
-      // TelegramMiniAppBridge backward-compatibility alias
-      const tgBridge = new TelegramMiniAppBridge(wallet);
-      assert.ok(tgBridge instanceof MiniAppBridge);
-      const tgAccounts = await tgBridge.requestAccounts();
-      assert.equal(tgAccounts[0], wallet.address.toBech32m());
+      // Assert that TelegramMiniAppBridge is removed from SDK exports for platform neutrality
+      const sdk = await import('../src/index.js');
+      assert.equal(sdk.TelegramMiniAppBridge, undefined);
     });
 
     test('External Asset Metadata Validation and SSRF Filtering', () => {

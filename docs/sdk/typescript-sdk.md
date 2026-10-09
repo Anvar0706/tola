@@ -1,13 +1,13 @@
 # TOLA Network TypeScript SDK (`@tola/sdk`)
 
-Official client SDK and Web3 provider library for interacting with TOLA Network in Node.js, Web browsers, React Native, and Telegram Mini Apps.
+Official client SDK and Web3 provider library for interacting with TOLA Network in Node.js, Web browsers, React Native, and embedded web applications.
 
 ---
 
 ## 1. Architecture & Design Principles
 
 - **Zero Heavy Cryptographic Dependencies:** Self-contained pure implementations of Keccak-256, BLAKE3, Secp256k1 (RFC 6979), and BIP-350 Bech32m.
-- **Cross-Platform Compatibility:** Runs seamlessly across Node.js 18+, modern evergreen browsers, and sandboxed WebView runtimes (Telegram WebApps).
+- **Cross-Platform Compatibility:** Runs seamlessly across Node.js 18+, modern evergreen browsers, and sandboxed WebView runtimes.
 - **Protocol Parity:** Matches Rust `tola-codec` and `tola-crypto` byte-for-byte in serialization and domain-separated signing digests.
 - **EIP-1193 Standard Provider:** Plug-and-play compatibility with standard Web3 libraries (viem, wagmi, ethers).
 
@@ -89,9 +89,9 @@ console.log('Active Peers:', health.peerCount);
 
 ---
 
-## 5. Telegram Mini App Integration
+## 5. Webview & Embedded Application Integration
 
-`@tola/sdk` includes `TolaProvider`, an EIP-1193 compatible provider that works inside Telegram Mini Apps without browser extension dependencies:
+`@tola/sdk` includes `TolaProvider`, an EIP-1193 compatible provider that works inside embedded web applications and WebViews without browser extension dependencies:
 
 ```typescript
 import { TolaProvider } from '@tola/sdk';

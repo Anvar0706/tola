@@ -50,12 +50,13 @@
   "keywords": [
     "tola",
     "blockchain",
+    "layer-1",
     "sdk",
     "web3",
     "ethereum",
     "bft",
     "eip-1193",
-    "telegram-mini-app"
+    "embedded-wallets"
   ],
   "author": "TOLA Network Core Contributors",
   "license": "Apache-2.0"

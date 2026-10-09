@@ -37,5 +37,3 @@ export declare class MiniAppBridge {
   handleConnectEnvelope(envelope: any, session?: any): Promise<any>;
   handleMessage(message: { id: number | string; method: string; params?: any[] }): Promise<any>;
 }
-
-export declare class TelegramMiniAppBridge extends MiniAppBridge {}

@@ -218,9 +218,3 @@ export class MiniAppBridge {
   }
 }
 
-/**
- * Backward compatibility alias for MiniAppBridge.
- * @deprecated Use MiniAppBridge instead.
- */
-export class TelegramMiniAppBridge extends MiniAppBridge {}
-

@@ -116,7 +116,7 @@ export class JsonRpcProvider {
 }
 
 /**
- * EIP-1193 Compliant Ethereum/TOLA Provider Interface for Web dApps and Telegram Mini Apps.
+ * EIP-1193 Compliant Ethereum/TOLA Provider Interface for Web dApps and embedded applications.
  */
 export class TolaProvider {
   constructor(rpcUrl = 'http://127.0.0.1:8545') {
