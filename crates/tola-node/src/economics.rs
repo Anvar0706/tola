@@ -1,6 +1,6 @@
 //! Mainnet native asset economics, emission schedule, fee burning, and supply conservation.
 //!
-//! Complies with ADR-0001, ADR-0003, and `prompts/20-native-asset.md`.
+//! Complies with native asset economics and emission specifications.
 //!
 //! Invariants:
 //! 1. Denomination: 1 TOLA = 10^18 base units (nano-tola / tol).

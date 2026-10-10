@@ -1,6 +1,6 @@
 //! Protocol Versioning, On-Chain Validator Upgrade Signaling, and Fork-Free Coordination.
 //!
-//! Complies with ADR-0001, ADR-0002, and `prompts/31-upgradeability.md`.
+//! Complies with on-chain protocol versioning and upgrade specifications.
 //!
 //! Mechanism:
 //! 1. Validators signal readiness by including target `ProtocolVersion` in block proposals.

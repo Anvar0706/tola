@@ -7,5 +7,4 @@ Documents the integration of social messengers and chat apps as sovereign Layer-
 - Architecture Blueprint: [messenger-architecture.md](messenger-architecture.md)
 - Messenger Integration Overview: [docs/messenger-integration.md](../messenger-integration.md)
 - TON Integration Research: [docs/research/ton-integration-research.md](../research/ton-integration-research.md)
-- ADR-0005: [Decoupled Ecosystem & Messenger](../../decisions/ADR-0005-decoupled-ecosystem-and-messenger-architecture.md)
 

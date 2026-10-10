@@ -62,7 +62,7 @@ $$\mathbf{m / 44' / \text{coin\_type}' / \text{account}' / \text{change} / \text
 | **Index** | `0` (`0x00000000`) | `0` (`0x00000000`) | Primary Address Index (Non-hardened) |
 
 > [!NOTE]
-> Coin Type `9999'` is formally classified as **PROPOSED (INTERNAL SPECIFICATION)** per [`decisions/ADR-0013-tola-wallet-derivation.md`](../../decisions/ADR-0013-tola-wallet-derivation.md) pending upstream inclusion in SatoshiLabs SLIP-0044.
+> Coin Type `9999'` is formally classified as **PROPOSED (INTERNAL SPECIFICATION)** per [`tola-wallet-derivation-standard-v1.md`](tola-wallet-derivation-standard-v1.md) pending upstream inclusion in SatoshiLabs SLIP-0044.
 
 **Default Proposed Canonical Mainnet Path:**
 $$\mathbf{m/44'/9999'/0'/0/0}$$

@@ -69,7 +69,7 @@ Initialized clean 12-crate workspace compiling with `rustc 1.99.0` (zero warning
 
 ## 3. Architecture Decisions & ADR Status
 
-Documented in [`decisions/ADR-REVIEW-PHASE-2.md`](../../decisions/ADR-REVIEW-PHASE-2.md):
+Documented in `ADR-REVIEW-PHASE-2`:
 - **All 12 ADRs (ADR-0001 through ADR-0012) are CONFIRMED.** Zero decisions invalidated.
 
 ---

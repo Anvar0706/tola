@@ -3,9 +3,6 @@
 ## Scope & Purpose
 Documents the multi-shard horizontal scaling architecture, coordination masterchain, VRF validator assignment, asynchronous cross-shard receipt routing, and inter-rollup state proofs.
 
-## Architectural Decision Records
-- **ADR-0014**: [Cross-Shard State Proofs, Dynamic Sharding & Inter-Rollup Bridge Architecture](../../decisions/ADR-0014-cross-shard-state-proofs-and-bridge.md)
-
 ## Core Specifications
 1. **Dynamic State Sharding**: [sharding-architecture.md](./sharding-architecture.md)
    - High-order byte modulo address partitioning ($O(1)$ local routing).

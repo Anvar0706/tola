@@ -56,7 +56,7 @@ The canonical user wallet lifecycle strictly follows standard deterministic deri
 
 ## 2. Derivation Paths & Network Separation (ADR-0013)
 
-Per [`ADR-0013`](../../decisions/ADR-0013-tola-wallet-derivation.md), TOLA introduces proposed internal coin types aligned with Chain IDs while offering fallback compatibility:
+Per [`TOLA Wallet Derivation Standard v1`](tola-wallet-derivation-standard-v1.md), TOLA introduces proposed internal coin types aligned with Chain IDs while offering fallback compatibility:
 
 | Network | Chain ID | Derivation Path | Status |
 | :--- | :--- | :--- | :--- |

@@ -7,4 +7,3 @@ This directory documents the Proof-of-Stake consensus engine, deterministic BFT 
 - BFT Consensus Engine: [docs/protocol/consensus-engine.md](../protocol/consensus-engine.md)
 - Consensus State Machine: [architecture/consensus-state-machine-v0.1.md](../../architecture/consensus-state-machine-v0.1.md)
 - Consensus Mechanism Research: [research/01-consensus-mechanisms.md](../../research/01-consensus-mechanisms.md)
-- ADR-0003: [PoS with BFT Finality](../../decisions/ADR-0003-consensus-mechanism-direction.md)

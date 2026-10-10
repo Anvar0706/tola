@@ -86,7 +86,6 @@ tola-sdk = { path = "crates/tola-sdk", version = "0.1.0" }
 │   └── python/                 # Official Python SDK (tola)
 ├── contracts/                  # Reference Solidity contracts & test fixtures
 ├── architecture/               # v0.1 formal architectural specifications
-├── decisions/                  # Architectural Decision Records (ADR-0001 – ADR-0018)
 ├── research/                   # Protocol empirical validation studies
 └── docs/                       # Technical documentation & reports
 ```
@@ -135,14 +134,14 @@ docker build -t tola-node:latest .
 
 | Parameter | Value | Reference |
 | :--- | :--- | :--- |
-| **Mainnet Chain ID** | `9999` | ADR-0006 |
-| **Testnet Chain ID** | `102` | ADR-0006 |
-| **Devnet Chain ID** | `1337` | ADR-0006 |
-| **Block Time** | `2.0 seconds` | ADR-0009 |
-| **Finality Rule** | `2-Chain Commit (Jolteon)` | ADR-0009 |
-| **Base Currency** | `TOLA` ($10^{18}$ base units) | ADR-0006 |
-| **EVM Version** | `Shanghai` (EIP-3860, EIP-3651, EIP-3855, EIP-2930) | ADR-0017 |
-| **BIP-44 Derivation** | `m/44'/9999'/0'/0/0` | ADR-0013 |
+| **Mainnet Chain ID** | `9999` | [docs/protocol/address-encoding.md](docs/protocol/address-encoding.md) |
+| **Testnet Chain ID** | `102` | [docs/protocol/address-encoding.md](docs/protocol/address-encoding.md) |
+| **Devnet Chain ID** | `1337` | [docs/protocol/address-encoding.md](docs/protocol/address-encoding.md) |
+| **Block Time** | `2.0 seconds` | [docs/protocol/consensus-engine.md](docs/protocol/consensus-engine.md) |
+| **Finality Rule** | `2-Chain Commit (Jolteon)` | [docs/protocol/consensus-engine.md](docs/protocol/consensus-engine.md) |
+| **Base Currency** | `TOLA` ($10^{18}$ base units) | [docs/protocol/native-asset.md](docs/protocol/native-asset.md) |
+| **EVM Version** | `Shanghai` (EIP-3860, EIP-3651, EIP-3855, EIP-2930) | [docs/smart-contracts/evm-core-specification.md](docs/smart-contracts/evm-core-specification.md) |
+| **BIP-44 Derivation** | `m/44'/9999'/0'/0/0` | [docs/wallet/tola-wallet-derivation-standard-v1.md](docs/wallet/tola-wallet-derivation-standard-v1.md) |
 
 ---
 

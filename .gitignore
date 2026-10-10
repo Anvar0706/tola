@@ -52,4 +52,5 @@ coverage/
 
 # Internal agent prompts and operational scratchpads
 /prompts/
+/decisions/
 
