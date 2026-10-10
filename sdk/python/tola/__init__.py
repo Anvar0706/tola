@@ -56,6 +56,8 @@ from .sharding import (
 from .external import (
     EXTERNAL_ASSET_CONTRACT_ADDRESS,
     ExternalAssetType,
+    EXTERNAL_ASSET_TYPE_IDS,
+    get_asset_type_id,
     ExternalAssetError,
     compute_external_asset_canonical_id,
     compute_external_asset_attestation_digest,
@@ -116,6 +118,8 @@ __all__ = [
     "DOMAIN_RECEIPT_NULLIFIER",
     "EXTERNAL_ASSET_CONTRACT_ADDRESS",
     "ExternalAssetType",
+    "EXTERNAL_ASSET_TYPE_IDS",
+    "get_asset_type_id",
     "ExternalAssetError",
     "compute_external_asset_canonical_id",
     "compute_external_asset_attestation_digest",

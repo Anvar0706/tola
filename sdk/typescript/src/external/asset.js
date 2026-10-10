@@ -24,35 +24,61 @@ export class ExternalAssetError extends Error {
 }
 
 export const ExternalAssetType = Object.freeze({
+  // Canonical platform-neutral asset types
+  IDENTITY_IDENTIFIER: 'IDENTITY_IDENTIFIER',
+  VIRTUAL_NUMBER: 'VIRTUAL_NUMBER',
+  GIFT_ASSET: 'GIFT_ASSET',
+  ATTESTATION_BADGE: 'ATTESTATION_BADGE',
+  SOCIAL_IDENTIFIER: 'SOCIAL_IDENTIFIER',
+  ACCESS_CREDENTIAL: 'ACCESS_CREDENTIAL',
+  DIGITAL_COLLECTIBLE: 'DIGITAL_COLLECTIBLE',
+  OTHER_EXTERNAL_ASSET: 'OTHER_EXTERNAL_ASSET',
+  REAL_WORLD_ASSET: 'REAL_WORLD_ASSET',
+  GAMING_ASSET: 'GAMING_ASSET',
+
+  // Backward-compatible legacy aliases
   MESSENGER_USERNAME: 'MESSENGER_USERNAME',
   MESSENGER_NUMBER: 'MESSENGER_NUMBER',
   MESSENGER_GIFT: 'MESSENGER_GIFT',
   MESSENGER_BADGE: 'MESSENGER_BADGE',
   SOCIAL_USERNAME: 'SOCIAL_USERNAME',
   SOCIAL_NUMBER: 'SOCIAL_NUMBER',
-  DIGITAL_COLLECTIBLE: 'DIGITAL_COLLECTIBLE',
-  OTHER_EXTERNAL_ASSET: 'OTHER_EXTERNAL_ASSET',
 });
 
 export const EXTERNAL_ASSET_TYPE_IDS = Object.freeze({
+  // Canonical identifiers
+  IDENTITY_IDENTIFIER: 1,
+  VIRTUAL_NUMBER: 2,
+  GIFT_ASSET: 3,
+  ATTESTATION_BADGE: 4,
+  SOCIAL_IDENTIFIER: 5,
+  ACCESS_CREDENTIAL: 6,
+  DIGITAL_COLLECTIBLE: 7,
+  OTHER_EXTERNAL_ASSET: 8,
+  REAL_WORLD_ASSET: 9,
+  GAMING_ASSET: 10,
+
+  // Backward-compatible mappings
   MESSENGER_USERNAME: 1,
   MESSENGER_NUMBER: 2,
   MESSENGER_GIFT: 3,
   MESSENGER_BADGE: 4,
   SOCIAL_USERNAME: 5,
   SOCIAL_NUMBER: 6,
-  DIGITAL_COLLECTIBLE: 7,
-  OTHER_EXTERNAL_ASSET: 8,
 });
 
 export function getAssetTypeId(assetType) {
   if (typeof assetType === 'number') {
-    if (assetType >= 1 && assetType <= 8) return assetType;
+    if (Number.isInteger(assetType) && assetType >= 1 && assetType <= 255) return assetType;
     throw new ExternalAssetError(`Invalid numeric assetType: ${assetType}`);
   }
   const id = EXTERNAL_ASSET_TYPE_IDS[assetType];
-  if (!id) throw new ExternalAssetError(`Unknown assetType: ${assetType}`);
-  return id;
+  if (id) return id;
+  if (typeof assetType === 'string' && /^\d+$/.test(assetType)) {
+    const parsed = parseInt(assetType, 10);
+    if (parsed >= 1 && parsed <= 255) return parsed;
+  }
+  throw new ExternalAssetError(`Unknown assetType: ${assetType}`);
 }
 
 /**

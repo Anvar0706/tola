@@ -1253,3 +1253,175 @@ fn test_on_chain_consensus_execution_and_persistent_storage_roundtrip() {
 
     let _ = std::fs::remove_dir_all(&state_path);
 }
+
+#[test]
+fn test_general_purpose_and_extensible_asset_categories() {
+    let state_path = unique_temp_dir("general-asset-categories");
+    let chain_id = ChainId::TESTNET;
+    let engine = SequentialBlockEngine::new(chain_id);
+    let epoch = 0u64;
+
+    let admin_kp = Secp256k1Keypair::generate();
+    let user_kp = Secp256k1Keypair::generate();
+    let rwa_verifier_kp = Secp256k1Keypair::generate();
+    let custom_verifier_kp = Secp256k1Keypair::generate();
+
+    let admin = admin_kp.address();
+    let user = user_kp.address();
+    let rwa_verifier = rwa_verifier_kp.address();
+    let custom_verifier = custom_verifier_kp.address();
+
+    // 1. Initialize DB and fund user
+    {
+        let mut db = PersistentStateDB::open(&state_path).expect("Open db");
+        let initial_funds = Amount::from_u128(1_000_000_000);
+        db.apply_delta(StateDelta {
+            accounts: vec![
+                (admin, Some(AccountState::new_with_balance(initial_funds))),
+                (user, Some(AccountState::new_with_balance(initial_funds))),
+            ],
+            storage: vec![],
+            code: vec![],
+        })
+        .unwrap();
+        db.commit(BlockHeight(0)).unwrap();
+    }
+
+    // 2. Compute canonical IDs for RWA (Type 9) and Custom (Type 42)
+    let cid_rwa = compute_external_asset_canonical_id(
+        "LandRegistryGlobal",
+        ExternalAssetType::RealWorldAsset,
+        "parcel-8819",
+    );
+    let cid_custom = compute_external_asset_canonical_id(
+        "ClimateStandardProtocol",
+        ExternalAssetType::Custom(42),
+        "carbon-cert-2026-01",
+    );
+
+    // 3. Create signed attestations
+    let attestation_rwa = {
+        let digest = compute_external_asset_attestation_digest(
+            chain_id.0,
+            1,
+            &user,
+            2500000000,
+            "LandRegistryGlobal",
+            ExternalAssetType::RealWorldAsset,
+            "parcel-8819",
+        );
+        let sig = rwa_verifier_kp.sign_recoverable(&digest).unwrap();
+        ExternalAssetAttestation {
+            chain_id: chain_id.0,
+            nonce: 1,
+            destination_wallet: user,
+            expires_at: 2500000000,
+            source_platform: "LandRegistryGlobal".to_string(),
+            asset_type: ExternalAssetType::RealWorldAsset,
+            external_asset_id: "parcel-8819".to_string(),
+            authorizer_address: rwa_verifier,
+            verifier_address: rwa_verifier,
+            signature: sig,
+        }
+    };
+
+    let attestation_custom = {
+        let digest = compute_external_asset_attestation_digest(
+            chain_id.0,
+            2,
+            &user,
+            2500000000,
+            "ClimateStandardProtocol",
+            ExternalAssetType::Custom(42),
+            "carbon-cert-2026-01",
+        );
+        let sig = custom_verifier_kp.sign_recoverable(&digest).unwrap();
+        ExternalAssetAttestation {
+            chain_id: chain_id.0,
+            nonce: 2,
+            destination_wallet: user,
+            expires_at: 2500000000,
+            source_platform: "ClimateStandardProtocol".to_string(),
+            asset_type: ExternalAssetType::Custom(42),
+            external_asset_id: "carbon-cert-2026-01".to_string(),
+            authorizer_address: custom_verifier,
+            verifier_address: custom_verifier,
+            signature: sig,
+        }
+    };
+
+    // 4. Execute block with both mints
+    {
+        let mut db = PersistentStateDB::open(&state_path).expect("Open db");
+        let tx_rwa = make_contract_tx(
+            &user_kp,
+            chain_id,
+            Nonce(0),
+            ExternalAssetCall::MintWithAttestation {
+                attestation: attestation_rwa,
+                metadata_uri: "ipfs://bafybeirwaparcel8819".to_string(),
+            }
+            .encode(),
+            Gas(300_000),
+            epoch,
+        );
+
+        let tx_custom = make_contract_tx(
+            &user_kp,
+            chain_id,
+            Nonce(1),
+            ExternalAssetCall::MintWithAttestation {
+                attestation: attestation_custom,
+                metadata_uri: "ipfs://bafybeicarboncert2026".to_string(),
+            }
+            .encode(),
+            Gas(300_000),
+            epoch,
+        );
+
+        let block = make_block(1, admin, vec![tx_rwa, tx_custom], 1770001000);
+        let receipts = engine.execute_block(&block, &mut db).unwrap();
+        assert_eq!(receipts.len(), 2);
+        assert!(
+            receipts[0].success,
+            "RWA mint must succeed: {:?}",
+            receipts[0]
+        );
+        assert!(
+            receipts[1].success,
+            "Custom asset category mint must succeed: {:?}",
+            receipts[1]
+        );
+
+        db.commit(BlockHeight(1)).unwrap();
+
+        // 5. Verify on-chain storage and asset records
+        assert_eq!(ExternalAssetStorage::read_owner(&db, 1), Some(user));
+        assert_eq!(ExternalAssetStorage::read_owner(&db, 2), Some(user));
+        assert_eq!(ExternalAssetStorage::read_balance(&db, &user), 2);
+
+        let rwa_asset = ExternalAssetStorage::read_asset(&db, 1).expect("RWA asset record");
+        assert_eq!(rwa_asset.asset_type, ExternalAssetType::RealWorldAsset);
+        assert_eq!(rwa_asset.source_platform, "LandRegistryGlobal");
+        assert_eq!(rwa_asset.external_asset_id, "parcel-8819");
+        assert_eq!(rwa_asset.authorizer, rwa_verifier);
+
+        let custom_asset = ExternalAssetStorage::read_asset(&db, 2).expect("Custom asset record");
+        assert_eq!(custom_asset.asset_type, ExternalAssetType::Custom(42));
+        assert_eq!(custom_asset.source_platform, "ClimateStandardProtocol");
+        assert_eq!(custom_asset.external_asset_id, "carbon-cert-2026-01");
+        assert_eq!(custom_asset.authorizer, custom_verifier);
+
+        // Canonical ID lookups
+        assert_eq!(
+            ExternalAssetStorage::read_token_by_canonical_id(&db, &cid_rwa),
+            Some(1)
+        );
+        assert_eq!(
+            ExternalAssetStorage::read_token_by_canonical_id(&db, &cid_custom),
+            Some(2)
+        );
+    }
+
+    let _ = std::fs::remove_dir_all(&state_path);
+}

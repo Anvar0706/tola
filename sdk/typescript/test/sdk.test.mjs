@@ -48,6 +48,7 @@ import {
   EXTERNAL_ASSET_CONTRACT_ADDRESS,
   ExternalAssetType,
   EXTERNAL_ASSET_TYPE_IDS,
+  getAssetTypeId,
   computeExternalAssetCanonicalId,
   computeExternalAssetAttestationDigest,
   signExternalAssetAttestation,
@@ -1137,22 +1138,46 @@ describe('TOLA TypeScript SDK (@tola/sdk)', () => {
   describe('Tokenized External Assets (TLS-721) & Cross-Platform Parity', () => {
     test('ExternalAssetType and Canonical ID Determinism', () => {
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.MESSENGER_USERNAME], 1);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.IDENTITY_IDENTIFIER], 1);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.VIRTUAL_NUMBER], 2);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.GIFT_ASSET], 3);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.ATTESTATION_BADGE], 4);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.SOCIAL_IDENTIFIER], 5);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.ACCESS_CREDENTIAL], 6);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.DIGITAL_COLLECTIBLE], 7);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.OTHER_EXTERNAL_ASSET], 8);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.REAL_WORLD_ASSET], 9);
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.GAMING_ASSET], 10);
+
+      // Legacy aliases backwards compatibility
+      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.MESSENGER_USERNAME], 1);
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.MESSENGER_NUMBER], 2);
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.MESSENGER_GIFT], 3);
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.MESSENGER_BADGE], 4);
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.SOCIAL_USERNAME], 5);
       assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.SOCIAL_NUMBER], 6);
-      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.DIGITAL_COLLECTIBLE], 7);
-      assert.equal(EXTERNAL_ASSET_TYPE_IDS[ExternalAssetType.OTHER_EXTERNAL_ASSET], 8);
 
-      const canon1 = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
+      // Open taxonomy: arbitrary custom asset types (1..255)
+      assert.equal(getAssetTypeId(42), 42);
+      assert.equal(getAssetTypeId('42'), 42);
+      assert.throws(() => getAssetTypeId(0), /Invalid numeric assetType/);
+      assert.throws(() => getAssetTypeId(256), /Invalid numeric assetType/);
+
+      const canon1 = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.IDENTITY_IDENTIFIER, '@anvar');
       const canon2 = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
       assert.deepEqual(canon1, canon2);
 
-      const canonDiffPlatform = computeExternalAssetCanonicalId('SocialAppB', ExternalAssetType.MESSENGER_USERNAME, '@anvar');
+      const canonRwa = computeExternalAssetCanonicalId('RealEstateRegistry', ExternalAssetType.REAL_WORLD_ASSET, 'parcel-1082');
+      const canonGame = computeExternalAssetCanonicalId('GameStudio', ExternalAssetType.GAMING_ASSET, 'sword-excalibur');
+      const canonCustom = computeExternalAssetCanonicalId('CustomPlatform', 42, 'item-xyz');
+      assert.equal(canonRwa.length, 32);
+      assert.equal(canonGame.length, 32);
+      assert.equal(canonCustom.length, 32);
+
+      const canonDiffPlatform = computeExternalAssetCanonicalId('SocialAppB', ExternalAssetType.IDENTITY_IDENTIFIER, '@anvar');
       assert.notDeepEqual(canon1, canonDiffPlatform);
 
-      const canonDiffType = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.SOCIAL_USERNAME, '@anvar');
+      const canonDiffType = computeExternalAssetCanonicalId('SocialAppA', ExternalAssetType.SOCIAL_IDENTIFIER, '@anvar');
       assert.notDeepEqual(canon1, canonDiffType);
     });
 

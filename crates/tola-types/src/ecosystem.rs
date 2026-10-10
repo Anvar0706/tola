@@ -5,47 +5,95 @@
 use crate::{Address, Amount, Gas, Nonce};
 
 /// Generic classification of external platform assets tokenizable on TOLA Network.
+/// Provides an open, extensible taxonomy for identity, credentials, collectibles,
+/// real-world assets (RWA), gaming items, and custom third-party asset categories.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ExternalAssetType {
-    MessengerUsername = 1,
-    MessengerNumber = 2,
-    MessengerGift = 3,
-    MessengerBadge = 4,
-    SocialUsername = 5,
-    SocialNumber = 6,
-    DigitalCollectible = 7,
-    OtherExternalAsset = 8,
+    /// Canonical identity identifiers (e.g., usernames, domain names, decentralized IDs)
+    IdentityIdentifier,
+    /// Virtual / numeric identifiers (e.g., phone numbers, device IDs, SIMs)
+    VirtualNumber,
+    /// Collectible gifts / tokens (e.g., platform gifts, promotional collectibles)
+    GiftAsset,
+    /// Attestation badges / credentials (e.g., verified status, achievements)
+    AttestationBadge,
+    /// Social media identifiers / handles
+    SocialIdentifier,
+    /// Access credentials / security tokens
+    AccessCredential,
+    /// Digital collectibles / NFTs
+    DigitalCollectible,
+    /// Unclassified external assets
+    OtherExternalAsset,
+    /// Real World Assets (e.g., real estate, commodities, invoices, physical luxury)
+    RealWorldAsset,
+    /// Gaming assets (e.g., in-game items, virtual equipment, skins)
+    GamingAsset,
+    /// User-defined or third-party custom asset category (11..=255)
+    Custom(u8),
 }
 
 impl ExternalAssetType {
+    // Backward compatibility aliases for legacy naming
+    #[allow(non_upper_case_globals)]
+    pub const MessengerUsername: Self = Self::IdentityIdentifier;
+    #[allow(non_upper_case_globals)]
+    pub const MessengerNumber: Self = Self::VirtualNumber;
+    #[allow(non_upper_case_globals)]
+    pub const MessengerGift: Self = Self::GiftAsset;
+    #[allow(non_upper_case_globals)]
+    pub const MessengerBadge: Self = Self::AttestationBadge;
+    #[allow(non_upper_case_globals)]
+    pub const SocialUsername: Self = Self::SocialIdentifier;
+    #[allow(non_upper_case_globals)]
+    pub const SocialNumber: Self = Self::AccessCredential;
+
     pub fn as_str(&self) -> &'static str {
         match self {
-            Self::MessengerUsername => "MESSENGER_USERNAME",
-            Self::MessengerNumber => "MESSENGER_NUMBER",
-            Self::MessengerGift => "MESSENGER_GIFT",
-            Self::MessengerBadge => "MESSENGER_BADGE",
-            Self::SocialUsername => "SOCIAL_USERNAME",
-            Self::SocialNumber => "SOCIAL_NUMBER",
+            Self::IdentityIdentifier => "IDENTITY_IDENTIFIER",
+            Self::VirtualNumber => "VIRTUAL_NUMBER",
+            Self::GiftAsset => "GIFT_ASSET",
+            Self::AttestationBadge => "ATTESTATION_BADGE",
+            Self::SocialIdentifier => "SOCIAL_IDENTIFIER",
+            Self::AccessCredential => "ACCESS_CREDENTIAL",
             Self::DigitalCollectible => "DIGITAL_COLLECTIBLE",
             Self::OtherExternalAsset => "OTHER_EXTERNAL_ASSET",
+            Self::RealWorldAsset => "REAL_WORLD_ASSET",
+            Self::GamingAsset => "GAMING_ASSET",
+            Self::Custom(_) => "CUSTOM_ASSET",
         }
     }
 
     pub fn to_u8(&self) -> u8 {
-        *self as u8
+        match self {
+            Self::IdentityIdentifier => 1,
+            Self::VirtualNumber => 2,
+            Self::GiftAsset => 3,
+            Self::AttestationBadge => 4,
+            Self::SocialIdentifier => 5,
+            Self::AccessCredential => 6,
+            Self::DigitalCollectible => 7,
+            Self::OtherExternalAsset => 8,
+            Self::RealWorldAsset => 9,
+            Self::GamingAsset => 10,
+            Self::Custom(val) => *val,
+        }
     }
 
     pub fn from_u8(val: u8) -> Option<Self> {
         match val {
-            1 => Some(Self::MessengerUsername),
-            2 => Some(Self::MessengerNumber),
-            3 => Some(Self::MessengerGift),
-            4 => Some(Self::MessengerBadge),
-            5 => Some(Self::SocialUsername),
-            6 => Some(Self::SocialNumber),
+            0 => None,
+            1 => Some(Self::IdentityIdentifier),
+            2 => Some(Self::VirtualNumber),
+            3 => Some(Self::GiftAsset),
+            4 => Some(Self::AttestationBadge),
+            5 => Some(Self::SocialIdentifier),
+            6 => Some(Self::AccessCredential),
             7 => Some(Self::DigitalCollectible),
             8 => Some(Self::OtherExternalAsset),
-            _ => None,
+            9 => Some(Self::RealWorldAsset),
+            10 => Some(Self::GamingAsset),
+            val => Some(Self::Custom(val)),
         }
     }
 }
@@ -55,15 +103,24 @@ impl core::str::FromStr for ExternalAssetType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "MESSENGER_USERNAME" => Ok(Self::MessengerUsername),
-            "MESSENGER_NUMBER" => Ok(Self::MessengerNumber),
-            "MESSENGER_GIFT" => Ok(Self::MessengerGift),
-            "MESSENGER_BADGE" => Ok(Self::MessengerBadge),
-            "SOCIAL_USERNAME" => Ok(Self::SocialUsername),
-            "SOCIAL_NUMBER" => Ok(Self::SocialNumber),
+            "IDENTITY_IDENTIFIER" | "MESSENGER_USERNAME" => Ok(Self::IdentityIdentifier),
+            "VIRTUAL_NUMBER" | "MESSENGER_NUMBER" => Ok(Self::VirtualNumber),
+            "GIFT_ASSET" | "MESSENGER_GIFT" => Ok(Self::GiftAsset),
+            "ATTESTATION_BADGE" | "MESSENGER_BADGE" => Ok(Self::AttestationBadge),
+            "SOCIAL_IDENTIFIER" | "SOCIAL_USERNAME" => Ok(Self::SocialIdentifier),
+            "ACCESS_CREDENTIAL" | "SOCIAL_NUMBER" => Ok(Self::AccessCredential),
             "DIGITAL_COLLECTIBLE" => Ok(Self::DigitalCollectible),
             "OTHER_EXTERNAL_ASSET" => Ok(Self::OtherExternalAsset),
-            _ => Err(()),
+            "REAL_WORLD_ASSET" | "RWA" => Ok(Self::RealWorldAsset),
+            "GAMING_ASSET" | "GAME_ASSET" => Ok(Self::GamingAsset),
+            _ => {
+                if let Ok(num) = s.parse::<u8>() {
+                    if num > 0 {
+                        return Self::from_u8(num).ok_or(());
+                    }
+                }
+                Err(())
+            }
         }
     }
 }
@@ -330,23 +387,74 @@ mod tests {
     #[test]
     fn test_external_asset_types_and_models() {
         let types = [
-            ExternalAssetType::MessengerUsername,
-            ExternalAssetType::MessengerNumber,
-            ExternalAssetType::MessengerGift,
-            ExternalAssetType::MessengerBadge,
-            ExternalAssetType::SocialUsername,
-            ExternalAssetType::SocialNumber,
+            ExternalAssetType::IdentityIdentifier,
+            ExternalAssetType::VirtualNumber,
+            ExternalAssetType::GiftAsset,
+            ExternalAssetType::AttestationBadge,
+            ExternalAssetType::SocialIdentifier,
+            ExternalAssetType::AccessCredential,
             ExternalAssetType::DigitalCollectible,
             ExternalAssetType::OtherExternalAsset,
+            ExternalAssetType::RealWorldAsset,
+            ExternalAssetType::GamingAsset,
+            ExternalAssetType::Custom(42),
         ];
 
         for t in types {
             let s = t.as_str();
-            assert_eq!(s.parse::<ExternalAssetType>(), Ok(t));
-            let b = t.to_u8();
-            assert_eq!(ExternalAssetType::from_u8(b), Some(t));
+            if let ExternalAssetType::Custom(_) = t {
+                assert_eq!(t.to_u8(), 42);
+                assert_eq!(ExternalAssetType::from_u8(42), Some(t));
+            } else {
+                assert_eq!(s.parse::<ExternalAssetType>(), Ok(t));
+                let b = t.to_u8();
+                assert_eq!(ExternalAssetType::from_u8(b), Some(t));
+            }
         }
+
+        // Backward compatibility parsing
+        assert_eq!(
+            "MESSENGER_USERNAME".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::IdentityIdentifier)
+        );
+        assert_eq!(
+            "MESSENGER_NUMBER".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::VirtualNumber)
+        );
+        assert_eq!(
+            "MESSENGER_GIFT".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::GiftAsset)
+        );
+        assert_eq!(
+            "MESSENGER_BADGE".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::AttestationBadge)
+        );
+        assert_eq!(
+            "SOCIAL_USERNAME".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::SocialIdentifier)
+        );
+        assert_eq!(
+            "SOCIAL_NUMBER".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::AccessCredential)
+        );
+        assert_eq!(
+            "RWA".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::RealWorldAsset)
+        );
+        assert_eq!(
+            "GAME_ASSET".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::GamingAsset)
+        );
+        assert_eq!(
+            "99".parse::<ExternalAssetType>(),
+            Ok(ExternalAssetType::Custom(99))
+        );
+
         assert_eq!("UNKNOWN".parse::<ExternalAssetType>(), Err(()));
-        assert_eq!(ExternalAssetType::from_u8(99), None);
+        assert_eq!(ExternalAssetType::from_u8(0), None);
+        assert_eq!(
+            ExternalAssetType::from_u8(99),
+            Some(ExternalAssetType::Custom(99))
+        );
     }
 }

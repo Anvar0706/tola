@@ -28,43 +28,79 @@ class ExternalAssetError(Exception):
 
 
 class ExternalAssetType(str, Enum):
+    # Canonical platform-neutral asset types
+    IDENTITY_IDENTIFIER = "IDENTITY_IDENTIFIER"
+    VIRTUAL_NUMBER = "VIRTUAL_NUMBER"
+    GIFT_ASSET = "GIFT_ASSET"
+    ATTESTATION_BADGE = "ATTESTATION_BADGE"
+    SOCIAL_IDENTIFIER = "SOCIAL_IDENTIFIER"
+    ACCESS_CREDENTIAL = "ACCESS_CREDENTIAL"
+    DIGITAL_COLLECTIBLE = "DIGITAL_COLLECTIBLE"
+    OTHER_EXTERNAL_ASSET = "OTHER_EXTERNAL_ASSET"
+    REAL_WORLD_ASSET = "REAL_WORLD_ASSET"
+    GAMING_ASSET = "GAMING_ASSET"
+
+    # Backward-compatible legacy aliases
     MESSENGER_USERNAME = "MESSENGER_USERNAME"
     MESSENGER_NUMBER = "MESSENGER_NUMBER"
     MESSENGER_GIFT = "MESSENGER_GIFT"
     MESSENGER_BADGE = "MESSENGER_BADGE"
     SOCIAL_USERNAME = "SOCIAL_USERNAME"
     SOCIAL_NUMBER = "SOCIAL_NUMBER"
-    DIGITAL_COLLECTIBLE = "DIGITAL_COLLECTIBLE"
-    OTHER_EXTERNAL_ASSET = "OTHER_EXTERNAL_ASSET"
 
 
 EXTERNAL_ASSET_TYPE_IDS = {
+    # Canonical types
+    ExternalAssetType.IDENTITY_IDENTIFIER: 1,
+    ExternalAssetType.VIRTUAL_NUMBER: 2,
+    ExternalAssetType.GIFT_ASSET: 3,
+    ExternalAssetType.ATTESTATION_BADGE: 4,
+    ExternalAssetType.SOCIAL_IDENTIFIER: 5,
+    ExternalAssetType.ACCESS_CREDENTIAL: 6,
+    ExternalAssetType.DIGITAL_COLLECTIBLE: 7,
+    ExternalAssetType.OTHER_EXTERNAL_ASSET: 8,
+    ExternalAssetType.REAL_WORLD_ASSET: 9,
+    ExternalAssetType.GAMING_ASSET: 10,
+    "IDENTITY_IDENTIFIER": 1,
+    "VIRTUAL_NUMBER": 2,
+    "GIFT_ASSET": 3,
+    "ATTESTATION_BADGE": 4,
+    "SOCIAL_IDENTIFIER": 5,
+    "ACCESS_CREDENTIAL": 6,
+    "DIGITAL_COLLECTIBLE": 7,
+    "OTHER_EXTERNAL_ASSET": 8,
+    "REAL_WORLD_ASSET": 9,
+    "GAMING_ASSET": 10,
+    "RWA": 9,
+    "GAME_ASSET": 10,
+
+    # Backward-compatible mappings
     ExternalAssetType.MESSENGER_USERNAME: 1,
     ExternalAssetType.MESSENGER_NUMBER: 2,
     ExternalAssetType.MESSENGER_GIFT: 3,
     ExternalAssetType.MESSENGER_BADGE: 4,
     ExternalAssetType.SOCIAL_USERNAME: 5,
     ExternalAssetType.SOCIAL_NUMBER: 6,
-    ExternalAssetType.DIGITAL_COLLECTIBLE: 7,
-    ExternalAssetType.OTHER_EXTERNAL_ASSET: 8,
     "MESSENGER_USERNAME": 1,
     "MESSENGER_NUMBER": 2,
     "MESSENGER_GIFT": 3,
     "MESSENGER_BADGE": 4,
     "SOCIAL_USERNAME": 5,
     "SOCIAL_NUMBER": 6,
-    "DIGITAL_COLLECTIBLE": 7,
-    "OTHER_EXTERNAL_ASSET": 8,
 }
 
 
 def get_asset_type_id(asset_type: Union[ExternalAssetType, str, int]) -> int:
     if isinstance(asset_type, int):
-        if 1 <= asset_type <= 8:
+        if 1 <= asset_type <= 255:
             return asset_type
         raise ExternalAssetError(f"Invalid numeric asset_type: {asset_type}")
     if asset_type in EXTERNAL_ASSET_TYPE_IDS:
         return EXTERNAL_ASSET_TYPE_IDS[asset_type]
+    if isinstance(asset_type, str) and asset_type.isdigit():
+        val = int(asset_type)
+        if 1 <= val <= 255:
+            return val
     raise ExternalAssetError(f"Unknown asset_type: {asset_type}")
 
 

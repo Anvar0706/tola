@@ -33,14 +33,18 @@ interface IERC721Receiver {
  */
 interface ITolaExternalAssetToken {
     enum ExternalAssetType {
-        MESSENGER_USERNAME,  // 0 -> 1 in protocol
-        MESSENGER_NUMBER,    // 1 -> 2 in protocol
-        MESSENGER_GIFT,      // 2 -> 3 in protocol
-        MESSENGER_BADGE,     // 3 -> 4 in protocol
-        SOCIAL_USERNAME,     // 4 -> 5 in protocol
-        SOCIAL_NUMBER,       // 5 -> 6 in protocol
-        DIGITAL_COLLECTIBLE, // 6 -> 7 in protocol
-        OTHER_EXTERNAL_ASSET // 7 -> 8 in protocol
+        IDENTITY_IDENTIFIER,  // 0 -> 1 in protocol (usernames, handles, domains)
+        VIRTUAL_NUMBER,       // 1 -> 2 in protocol (virtual numbers, SIMs, device IDs)
+        GIFT_ASSET,           // 2 -> 3 in protocol (gifts, promotional collectibles)
+        ATTESTATION_BADGE,    // 3 -> 4 in protocol (reputation badges, verified marks)
+        SOCIAL_IDENTIFIER,    // 4 -> 5 in protocol (social profiles, handles)
+        ACCESS_CREDENTIAL,    // 5 -> 6 in protocol (access passes, membership tokens)
+        DIGITAL_COLLECTIBLE,  // 6 -> 7 in protocol (NFTs, digital artwork)
+        OTHER_EXTERNAL_ASSET, // 7 -> 8 in protocol (unclassified external items)
+        REAL_WORLD_ASSET,     // 8 -> 9 in protocol (RWA, real estate, physical luxury)
+        GAMING_ASSET          // 9 -> 10 in protocol (in-game items, skins, game equipment)
+        // Note: uint8 assetType in ExternalAssetRecord and mintWithAttestation accommodates
+        // any custom external asset category from 1 to 255.
     }
 
     struct ExternalAssetRecord {

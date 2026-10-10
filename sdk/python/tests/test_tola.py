@@ -46,6 +46,8 @@ from tola import (
     verify_merkle_inclusion_proof,
     EXTERNAL_ASSET_CONTRACT_ADDRESS,
     ExternalAssetType,
+    EXTERNAL_ASSET_TYPE_IDS,
+    get_asset_type_id,
     ExternalAssetError,
     compute_external_asset_canonical_id,
     compute_external_asset_attestation_digest,
@@ -1261,23 +1263,49 @@ class TestTolaSdk(unittest.TestCase):
         self.assertFalse(verify_merkle_inclusion_proof(root, leaves[0], proof0, 1))
 
     def test_external_asset_types_and_canonical_id_determinism(self):
+        # Canonical platform-neutral types
+        self.assertEqual(ExternalAssetType.IDENTITY_IDENTIFIER.value, "IDENTITY_IDENTIFIER")
+        self.assertEqual(ExternalAssetType.VIRTUAL_NUMBER.value, "VIRTUAL_NUMBER")
+        self.assertEqual(ExternalAssetType.GIFT_ASSET.value, "GIFT_ASSET")
+        self.assertEqual(ExternalAssetType.ATTESTATION_BADGE.value, "ATTESTATION_BADGE")
+        self.assertEqual(ExternalAssetType.SOCIAL_IDENTIFIER.value, "SOCIAL_IDENTIFIER")
+        self.assertEqual(ExternalAssetType.ACCESS_CREDENTIAL.value, "ACCESS_CREDENTIAL")
+        self.assertEqual(ExternalAssetType.DIGITAL_COLLECTIBLE.value, "DIGITAL_COLLECTIBLE")
+        self.assertEqual(ExternalAssetType.OTHER_EXTERNAL_ASSET.value, "OTHER_EXTERNAL_ASSET")
+        self.assertEqual(ExternalAssetType.REAL_WORLD_ASSET.value, "REAL_WORLD_ASSET")
+        self.assertEqual(ExternalAssetType.GAMING_ASSET.value, "GAMING_ASSET")
+
+        # Legacy aliases backwards compatibility
         self.assertEqual(ExternalAssetType.MESSENGER_USERNAME.value, "MESSENGER_USERNAME")
         self.assertEqual(ExternalAssetType.MESSENGER_NUMBER.value, "MESSENGER_NUMBER")
         self.assertEqual(ExternalAssetType.MESSENGER_GIFT.value, "MESSENGER_GIFT")
         self.assertEqual(ExternalAssetType.MESSENGER_BADGE.value, "MESSENGER_BADGE")
         self.assertEqual(ExternalAssetType.SOCIAL_USERNAME.value, "SOCIAL_USERNAME")
         self.assertEqual(ExternalAssetType.SOCIAL_NUMBER.value, "SOCIAL_NUMBER")
-        self.assertEqual(ExternalAssetType.DIGITAL_COLLECTIBLE.value, "DIGITAL_COLLECTIBLE")
-        self.assertEqual(ExternalAssetType.OTHER_EXTERNAL_ASSET.value, "OTHER_EXTERNAL_ASSET")
 
-        canon1 = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
+        # Open taxonomy: arbitrary custom asset types (1..255)
+        self.assertEqual(get_asset_type_id(42), 42)
+        self.assertEqual(get_asset_type_id("42"), 42)
+        with self.assertRaises(ExternalAssetError):
+            get_asset_type_id(0)
+        with self.assertRaises(ExternalAssetError):
+            get_asset_type_id(256)
+
+        canon1 = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.IDENTITY_IDENTIFIER, "@anvar")
         canon2 = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
         self.assertEqual(canon1, canon2)
 
-        canon_diff_plat = compute_external_asset_canonical_id("SocialAppB", ExternalAssetType.MESSENGER_USERNAME, "@anvar")
+        canon_rwa = compute_external_asset_canonical_id("RealEstateRegistry", ExternalAssetType.REAL_WORLD_ASSET, "parcel-1082")
+        canon_game = compute_external_asset_canonical_id("GameStudio", ExternalAssetType.GAMING_ASSET, "sword-excalibur")
+        canon_custom = compute_external_asset_canonical_id("CustomPlatform", 42, "item-xyz")
+        self.assertEqual(len(canon_rwa), 32)
+        self.assertEqual(len(canon_game), 32)
+        self.assertEqual(len(canon_custom), 32)
+
+        canon_diff_plat = compute_external_asset_canonical_id("SocialAppB", ExternalAssetType.IDENTITY_IDENTIFIER, "@anvar")
         self.assertNotEqual(canon1, canon_diff_plat)
 
-        canon_diff_type = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.SOCIAL_USERNAME, "@anvar")
+        canon_diff_type = compute_external_asset_canonical_id("SocialAppA", ExternalAssetType.SOCIAL_IDENTIFIER, "@anvar")
         self.assertNotEqual(canon1, canon_diff_type)
 
     def test_absence_of_native_identity_and_gifts_in_python_sdk(self):

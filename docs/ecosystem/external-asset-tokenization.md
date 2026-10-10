@@ -2,11 +2,11 @@
 
 ## 1. Architectural Overview
 
-The TOLA External Asset Tokenization Architecture enables independent third-party tokenization platforms (similar to the Fragment model) to bridge external handles, numbers, and digital gifts into TOLA's TLS-721 token ecosystem.
+The TOLA External Asset Tokenization Architecture enables independent third-party tokenization platforms to bridge external identity identifiers, virtual credentials, digital collectibles, real-world assets (RWA), gaming items, and custom external assets into TOLA's TLS-721 token ecosystem.
 
 Under this model:
 - The **TOLA blockchain** remains entirely passive, sovereign, and agnostic to external service operations.
-- The **Independent Tokenization Service** authenticates external platform users off-chain and issues cryptographically signed attestations.
+- The **Independent Tokenization Service** authenticates external platform users or real-world authorities off-chain and issues cryptographically signed attestations.
 - The **TOLA TLS-721 Smart Contract / Node Runtime** verifies these attestations deterministically and mints on-chain representations.
 
 ---
