@@ -11,4 +11,3 @@ Specifies the tokenization pipeline, verification protocol, and on-chain ownersh
 - External Digital Gifts Specification: [digital-gifts.md](digital-gifts.md)
 - Reference Smart Contract: [contracts/TolaExternalAssetToken.sol](../../contracts/TolaExternalAssetToken.sol)
 - Tokenized External Asset Specification: [docs/ecosystem/external-asset-tokenization.md](../ecosystem/external-asset-tokenization.md)
-- Subsystem Prompt: [prompts/44-digital-gifts.md](../../prompts/44-digital-gifts.md)

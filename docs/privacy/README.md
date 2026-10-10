@@ -4,5 +4,4 @@
 Covers privacy-preserving identity models, Anonymous Virtual Numbers (AVNs), zero-knowledge group memberships, and zero-PII on-chain policies.
 
 ## Key References & Specifications
-- Cryptographic Identity & Privacy Model: [docs/privacy-model.md](../privacy-model.md)
-- Identity Subsystem: [prompts/45-identity-and-privacy.md](../../prompts/45-identity-and-privacy.md)
+- ADR-0011 (Cryptographic Identity & Privacy Roadmap): [../../decisions/ADR-0011-cryptographic-identity-and-privacy-roadmap.md](../../decisions/ADR-0011-cryptographic-identity-and-privacy-roadmap.md)

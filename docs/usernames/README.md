@@ -11,4 +11,3 @@ Specifies the tokenization pipeline, verification protocol, and on-chain ownersh
 - External Username Tokenization Specification: [username-system.md](username-system.md)
 - Reference Smart Contract: [contracts/TolaExternalAssetToken.sol](../../contracts/TolaExternalAssetToken.sol)
 - Tokenized External Asset Specification: [docs/ecosystem/external-asset-tokenization.md](../ecosystem/external-asset-tokenization.md)
-- Subsystem Prompt: [prompts/43-username-system.md](../../prompts/43-username-system.md)

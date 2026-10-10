@@ -50,3 +50,6 @@ yarn-error.log*
 coverage/
 .nyc_output/
 
+# Internal agent prompts and operational scratchpads
+/prompts/
+

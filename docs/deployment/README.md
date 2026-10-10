@@ -4,6 +4,6 @@
 Docker blueprints, systemd units, hardware profiles, testnet faucet operations, and mainnet launch ceremonies.
 
 ## Key References & Specifications
-- Node Deployment: [prompts/39-node-deployment.md](../../prompts/39-node-deployment.md)
-- Public Testnet: [prompts/40-testnet.md](../../prompts/40-testnet.md)
-- Mainnet Readiness: [prompts/41-mainnet.md](../../prompts/41-mainnet.md)
+- Node Deployment: [docs/protocol/node-architecture.md](../protocol/node-architecture.md)
+- Public Testnet: [docs/protocol/testnet-architecture.md](../protocol/testnet-architecture.md)
+- Mainnet Genesis Configuration: [genesis-mainnet.json](../../genesis-mainnet.json)

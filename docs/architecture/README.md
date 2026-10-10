@@ -7,4 +7,5 @@ This directory houses the comprehensive architectural specifications for TOLA Ne
 - [System Overview](../../architecture/system-overview.md)
 - [System Threat Model](../../architecture/threat-model.md)
 - [Scalability Model](../../architecture/scalability-model.md)
-- Relevant Prompts: `prompts/02-architecture.md`, `prompts/36-performance.md`
+- [Scalability Specification](../../architecture/scalability-specification-v0.1.md)
+- [Crate Dependency Graph](../../architecture/crate-dependency-graph.md)

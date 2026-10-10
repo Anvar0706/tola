@@ -1,7 +1,7 @@
 # TOLA Network: Validator Registry, Staking & Automated Slashing Specification
 
 ## 1. Overview & Architectural Motivation
-The **TOLA Staking & Slashing Subsystem** (`tola-consensus::registry` & `tola-consensus::slashing`) establishes the economic security and Byzantine accountability layer for TOLA Network, conforming to **ADR-0009**, **research/06-consensus-validation.md**, and **prompts/13-consensus.md**.
+The **TOLA Staking & Slashing Subsystem** (`tola-consensus::registry` & `tola-consensus::slashing`) establishes the economic security and Byzantine accountability layer for TOLA Network, conforming to **ADR-0009**, **research/06-consensus-validation.md**, and **architecture/consensus-specification-v0.1.md**.
 
 Proof-of-Stake protocols require strong economic guarantees to prevent Sybil attacks, long-range equivocation, and non-deterministic committee selection. In TOLA:
 1. **Sybil Resistance via Bonded Capital:** Only validators meeting a minimum self-stake threshold can participate in consensus proposals and vote aggregation.

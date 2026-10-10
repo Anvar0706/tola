@@ -1,7 +1,7 @@
 # TOLA Network: Consensus Engine & Pipelined BFT Specification
 
 ## 1. Overview & Architectural Motivation
-The **TOLA Consensus Engine** (`tola-consensus`) implements a high-assurance, Byzantine Fault Tolerant (BFT) Proof-of-Stake consensus state machine conforming to **ADR-0009** and **prompts/13-consensus.md**.
+The **TOLA Consensus Engine** (`tola-consensus`) implements a high-assurance, Byzantine Fault Tolerant (BFT) Proof-of-Stake consensus state machine conforming to **ADR-0009** and **architecture/consensus-specification-v0.1.md**.
 
 In classical BFT protocols (e.g. Tendermint/PBFT), all-to-all voting gossip incurs quadratic $O(N^2)$ message complexity, creating severe network degradation when validator counts exceed 100. Furthermore, naive 1-second block targets violate speed-of-light cross-continental latency bounds under global validator topologies (proven in `research/06-consensus-validation.md`).
 

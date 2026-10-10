@@ -2,7 +2,7 @@
 
 ## 1. Overview & Architectural Motivation
 The **TOLA P2P Network** (`tola-p2p`) provides resilient, low-latency, and Sybil-resistant communication across decentralized validator nodes and non-validating full nodes.
-In accordance with **prompts/12-p2p.md** and **architecture/networking-specification-v0.1.md**, the networking layer solves four fundamental distributed network threats:
+In accordance with **architecture/networking-specification-v0.1.md**, the networking layer solves four fundamental distributed network threats:
 1. **Network Partition & Eclipse Attacks:** Malicious entities attempting to monopolize peer connection slots from cloud subnets.
 2. **Gossip Amplification & Broadcast Storms:** Duplicate relaying leading to exponential bandwidth exhaustion.
 3. **Poisoned Block & Transaction Propagation:** Malformed payloads degrading CPU verification queues.
